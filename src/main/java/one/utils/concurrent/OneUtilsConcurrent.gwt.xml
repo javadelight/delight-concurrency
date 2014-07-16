@@ -4,7 +4,7 @@
   
   All rights reserved.
 -->
-<module rename-to='oneutils'>
+<module rename-to='oneutilsconcurrent'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
 	
@@ -13,7 +13,7 @@
 <!-- <inherits name='com.google.common.Guava'></inherits>-->
 
   <!-- Specify the app entry point class.    -->                    
-  <entry-point class='one.utils.internal.DummyEntryPoint'/> 
+  <entry-point class='one.utils.concurrent.internal.DummyEntryPoint'/> 
 
   <!-- Specify the paths for translatable code                    -->
   <source path=''>
