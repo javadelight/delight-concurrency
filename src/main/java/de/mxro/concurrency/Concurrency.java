@@ -1,10 +1,10 @@
 package de.mxro.concurrency;
 
 /**
- * Basic concurrency operations, most of which can be emulated in a one-thread
+ * Abstraction of basic concurrency operations, most of which can be emulated in a one-thread
  * environment (like JavaScript).
  * 
- * @author mroh004
+ * @author <a href="http://www.mxro.de/">Max Rohde</a>
  * 
  */
 public interface Concurrency {
