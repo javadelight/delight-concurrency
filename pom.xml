@@ -2,7 +2,7 @@
 <!-- Template: Source + GWT + in workspace dependencies 27.11.2010 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<artifactId>concurrency</artifactId>
+	<artifactId>concurrency-api</artifactId>
 	<groupId>de.mxro.concurrency</groupId>
 	<version>0.0.2</version>
 	<description>An abstract and lightweight definition of Concurrency.</description>
