@@ -7,7 +7,6 @@
 	<version>0.0.2</version>
 	<description>An abstract and lightweight definition of Concurrency.</description>
 	<url>https://github.com/mxro/concurrency-api</url>
-	
 	<properties>
 
 		<module.gwtVersion>2.2.0</module.gwtVersion>
