@@ -3,10 +3,10 @@ package one.utils.concurrent;
 /**
  * A simple lock implementation.
  * 
- * @author mroh004
+ * @author Max
  * 
  */
-public interface OneLock {
+public interface Lock {
 
 	public abstract void lock();
 

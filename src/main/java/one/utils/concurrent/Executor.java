@@ -1,6 +1,6 @@
 package one.utils.concurrent;
 
-public interface OneExecutor {
+public interface Executor {
 
 	/**
 	 * Returns an object representing the thread used to execute the runnable if

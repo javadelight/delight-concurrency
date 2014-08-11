@@ -7,7 +7,7 @@ public interface ExecutorFactory {
 	 * 
 	 * @return
 	 */
-	public abstract OneExecutor newSingleThreadExecutor(Object owner);
+	public abstract Executor newSingleThreadExecutor(Object owner);
 
 	/**
 	 * Will execute commands in a number of parallel threads.
@@ -16,7 +16,7 @@ public interface ExecutorFactory {
 	 * @param maxParallelThreads
 	 * @return
 	 */
-	public abstract OneExecutor newParallelExecutor(int maxParallelThreads,
+	public abstract Executor newParallelExecutor(int maxParallelThreads,
 			final Object owner);
 
 	/**
@@ -25,6 +25,6 @@ public interface ExecutorFactory {
 	 * 
 	 * @return
 	 */
-	public abstract OneExecutor newImmideateExecutor();
+	public abstract Executor newImmideateExecutor();
 
 }

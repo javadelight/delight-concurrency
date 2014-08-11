@@ -1,6 +1,6 @@
 package one.utils.concurrent;
 
-public interface OneAtomicBoolean {
+public interface SimpleAtomicBoolean {
 
 	public boolean compareAndSet(boolean expect, boolean update);
 

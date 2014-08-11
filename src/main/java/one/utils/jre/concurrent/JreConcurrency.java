@@ -23,9 +23,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import one.utils.concurrent.CollectionFactory;
 import one.utils.concurrent.Concurrency;
 import one.utils.concurrent.ExecutorFactory;
-import one.utils.concurrent.OneAtomicBoolean;
-import one.utils.concurrent.OneExecutor;
-import one.utils.concurrent.OneLock;
+import one.utils.concurrent.SimpleAtomicBoolean;
+import one.utils.concurrent.Executor;
+import one.utils.concurrent.Lock;
 import one.utils.concurrent.OneTimer;
 import one.utils.concurrent.TimerFactory;
 
@@ -49,14 +49,14 @@ public class JreConcurrency implements Concurrency {
         return new ExecutorFactory() {
 
             @Override
-            public OneExecutor newSingleThreadExecutor(final Object owner) {
+            public Executor newSingleThreadExecutor(final Object owner) {
                 final ExecutorService executor = newExecutor(1, owner);
 
                 return new JavaExecutor(executor);
             }
 
             @Override
-            public OneExecutor newParallelExecutor(
+            public Executor newParallelExecutor(
                     final int maxParallelThreads, final Object owner) {
                 final ExecutorService executor = newExecutor(
                         maxParallelThreads, owner);
@@ -65,8 +65,8 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public OneExecutor newImmideateExecutor() {
-                return new OneExecutor() {
+            public Executor newImmideateExecutor() {
+                return new Executor() {
 
                     @Override
                     public Object execute(final Runnable runnable) {
@@ -163,9 +163,9 @@ public class JreConcurrency implements Concurrency {
     }
 
     @Override
-    public OneLock newLock() {
+    public Lock newLock() {
 
-        return new OneLock() {
+        return new Lock() {
             private final ReentrantLock lock = new ReentrantLock();
 
             @Override
@@ -282,9 +282,9 @@ public class JreConcurrency implements Concurrency {
     }
 
     @Override
-    public OneAtomicBoolean newAtomicBoolean(final boolean value) {
+    public SimpleAtomicBoolean newAtomicBoolean(final boolean value) {
 
-        return new OneAtomicBoolean() {
+        return new SimpleAtomicBoolean() {
 
             private final AtomicBoolean wrapped = new AtomicBoolean(value);
 

@@ -15,9 +15,9 @@ public interface Concurrency {
 
 	public abstract void runLater(Runnable runnable);
 
-	public abstract OneLock newLock();
+	public abstract Lock newLock();
 
 	public abstract CollectionFactory newCollection();
 
-	public abstract OneAtomicBoolean newAtomicBoolean(boolean value);
+	public abstract SimpleAtomicBoolean newAtomicBoolean(boolean value);
 }
