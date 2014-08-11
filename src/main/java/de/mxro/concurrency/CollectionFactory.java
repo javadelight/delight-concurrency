@@ -1,4 +1,4 @@
-package one.utils.concurrent;
+package de.mxro.concurrency;
 
 import java.util.List;
 import java.util.Map;

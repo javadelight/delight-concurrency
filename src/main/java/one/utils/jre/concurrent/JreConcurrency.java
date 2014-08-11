@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-import one.utils.concurrent.CollectionFactory;
-import one.utils.concurrent.Concurrency;
-import one.utils.concurrent.ExecutorFactory;
-import one.utils.concurrent.SimpleAtomicBoolean;
-import one.utils.concurrent.Executor;
-import one.utils.concurrent.Lock;
-import one.utils.concurrent.OneTimer;
-import one.utils.concurrent.TimerFactory;
+import de.mxro.concurrency.CollectionFactory;
+import de.mxro.concurrency.Concurrency;
+import de.mxro.concurrency.Executor;
+import de.mxro.concurrency.ExecutorFactory;
+import de.mxro.concurrency.Lock;
+import de.mxro.concurrency.SimpleTimer;
+import de.mxro.concurrency.SimpleAtomicBoolean;
+import de.mxro.concurrency.TimerFactory;
 
 public class JreConcurrency implements Concurrency {
 
@@ -96,7 +96,7 @@ public class JreConcurrency implements Concurrency {
         return new TimerFactory() {
 
             @Override
-            public OneTimer scheduleOnce(final int when, final Runnable runnable) {
+            public SimpleTimer scheduleOnce(final int when, final Runnable runnable) {
 
                 final java.util.Timer javaTimer = new java.util.Timer();
                 final TimerTask timerTask = new TimerTask() {
@@ -110,7 +110,7 @@ public class JreConcurrency implements Concurrency {
 
                 javaTimer.schedule(timerTask, when);
 
-                return new OneTimer() {
+                return new SimpleTimer() {
 
                     @Override
                     public void stop() {
@@ -122,7 +122,7 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public OneTimer scheduleRepeating(final int offsetInMs,
+            public SimpleTimer scheduleRepeating(final int offsetInMs,
                     final int intervallInMs, final Runnable runnable) {
                 final java.util.Timer javaTimer = new java.util.Timer();
                 final TimerTask timerTask = new TimerTask() {
@@ -137,7 +137,7 @@ public class JreConcurrency implements Concurrency {
                 javaTimer.scheduleAtFixedRate(timerTask, offsetInMs,
                         intervallInMs);
 
-                return new OneTimer() {
+                return new SimpleTimer() {
 
                     @Override
                     public void stop() {

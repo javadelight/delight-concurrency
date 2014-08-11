@@ -1,4 +1,4 @@
-package one.utils.concurrent;
+package de.mxro.concurrency;
 
 /**
  * Simple factory to create timers for repeating and non-repeating tasks.
@@ -8,9 +8,9 @@ package one.utils.concurrent;
  */
 public interface TimerFactory {
 
-	public OneTimer scheduleOnce(int when, Runnable runnable);
+	public SimpleTimer scheduleOnce(int when, Runnable runnable);
 
-	public OneTimer scheduleRepeating(int offsetInMs, int intervallInMs,
+	public SimpleTimer scheduleRepeating(int offsetInMs, int intervallInMs,
 			Runnable runnable);
 
 }

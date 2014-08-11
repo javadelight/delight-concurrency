@@ -1,4 +1,4 @@
-package one.utils.concurrent;
+package de.mxro.concurrency;
 
 public interface SimpleAtomicBoolean {
 

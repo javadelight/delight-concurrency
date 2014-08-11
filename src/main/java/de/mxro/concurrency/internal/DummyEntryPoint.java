@@ -3,7 +3,7 @@
  * 
  * All rights reserved.
  ******************************************************************************/
-package one.utils.concurrent.internal;
+package de.mxro.concurrency.internal;
 
 /**
  * Necessary for GWT 2.X to compile this module

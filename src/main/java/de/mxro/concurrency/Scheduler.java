@@ -1,4 +1,4 @@
-package one.utils.concurrent;
+package de.mxro.concurrency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class Scheduler<ItemType> {
 
 	private final ScheduledListener<ItemType> listener;
 
-	private OneTimer timer;
+	private SimpleTimer timer;
 
 	private final Concurrency con;
 

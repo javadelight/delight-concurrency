@@ -1,4 +1,4 @@
-package one.utils.concurrent;
+package de.mxro.concurrency;
 
 /**
  * A simple timer interface, allows the timer to be stopped.
@@ -6,7 +6,7 @@ package one.utils.concurrent;
  * @author mroh004
  * 
  */
-public interface OneTimer {
+public interface SimpleTimer {
 
 	/**
 	 * Stops this timer. Running executions are not affected.

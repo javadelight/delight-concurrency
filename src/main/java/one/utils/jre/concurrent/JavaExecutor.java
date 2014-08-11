@@ -4,7 +4,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import one.utils.concurrent.Executor;
+import de.mxro.concurrency.Executor;
 
 public class JavaExecutor implements Executor {
 	private final ExecutorService executor;
