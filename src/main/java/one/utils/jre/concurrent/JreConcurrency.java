@@ -25,8 +25,8 @@ import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.Executor;
 import de.mxro.concurrency.ExecutorFactory;
 import de.mxro.concurrency.Lock;
-import de.mxro.concurrency.SimpleTimer;
 import de.mxro.concurrency.SimpleAtomicBoolean;
+import de.mxro.concurrency.SimpleTimer;
 import de.mxro.concurrency.TimerFactory;
 
 public class JreConcurrency implements Concurrency {
@@ -38,8 +38,7 @@ public class JreConcurrency implements Concurrency {
             return isAndroid;
         }
 
-        isAndroid = System.getProperty("java.vm.name").equalsIgnoreCase(
-                "Dalvik");
+        isAndroid = System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik");
         return isAndroid;
     }
 
@@ -56,10 +55,8 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public Executor newParallelExecutor(
-                    final int maxParallelThreads, final Object owner) {
-                final ExecutorService executor = newExecutor(
-                        maxParallelThreads, owner);
+            public Executor newParallelExecutor(final int maxParallelThreads, final Object owner) {
+                final ExecutorService executor = newExecutor(maxParallelThreads, owner);
 
                 return new JavaExecutor(executor);
             }
@@ -98,7 +95,7 @@ public class JreConcurrency implements Concurrency {
             @Override
             public SimpleTimer scheduleOnce(final int when, final Runnable runnable) {
 
-                final java.util.Timer javaTimer = new java.util.Timer();
+                final java.util.Timer javaTimer = new java.util.Timer("SimpleTimer-for-" + runnable.getClass());
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
@@ -122,8 +119,7 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public SimpleTimer scheduleRepeating(final int offsetInMs,
-                    final int intervallInMs, final Runnable runnable) {
+            public SimpleTimer scheduleRepeating(final int offsetInMs, final int intervallInMs, final Runnable runnable) {
                 final java.util.Timer javaTimer = new java.util.Timer();
                 final TimerTask timerTask = new TimerTask() {
 
@@ -134,8 +130,7 @@ public class JreConcurrency implements Concurrency {
 
                 };
 
-                javaTimer.scheduleAtFixedRate(timerTask, offsetInMs,
-                        intervallInMs);
+                javaTimer.scheduleAtFixedRate(timerTask, offsetInMs, intervallInMs);
 
                 return new SimpleTimer() {
 
@@ -192,43 +187,36 @@ public class JreConcurrency implements Concurrency {
         return new CollectionFactory() {
 
             @Override
-            public <GPType> Queue<GPType> newThreadSafeQueue(
-                    final Class<GPType> itemType) {
+            public <GPType> Queue<GPType> newThreadSafeQueue(final Class<GPType> itemType) {
                 return new ConcurrentLinkedQueue<GPType>();
             }
 
             @Override
-            public <ItemType> List<ItemType> newThreadSafeList(
-                    final Class<ItemType> itemType) {
+            public <ItemType> List<ItemType> newThreadSafeList(final Class<ItemType> itemType) {
 
                 return Collections.synchronizedList(new ArrayList<ItemType>());
             }
 
             @Override
-            public <KeyType, ValueType> Map<KeyType, ValueType> newThreadSafeMap(
-                    final Class<KeyType> keyType,
+            public <KeyType, ValueType> Map<KeyType, ValueType> newThreadSafeMap(final Class<KeyType> keyType,
                     final Class<ValueType> valueType) {
-                return Collections
-                        .synchronizedMap(new HashMap<KeyType, ValueType>());
+                return Collections.synchronizedMap(new HashMap<KeyType, ValueType>());
             }
 
             @Override
-            public <ItemType> Set<ItemType> newThreadSafeSet(
-                    final Class<ItemType> itemType) {
+            public <ItemType> Set<ItemType> newThreadSafeSet(final Class<ItemType> itemType) {
                 return Collections.synchronizedSet(new HashSet<ItemType>());
             }
         };
     }
 
-    private static ExecutorService newExecutor(final int capacity,
-            final Object owner) {
+    private static ExecutorService newExecutor(final int capacity, final Object owner) {
 
         return newExecutorJvm(capacity, owner);
 
     }
 
-    private static ExecutorService newExecutorJvm(final int capacity,
-            final Object owner) {
+    private static ExecutorService newExecutorJvm(final int capacity, final Object owner) {
         final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
         final String threadName = owner.getClass().getName();
 
@@ -242,18 +230,14 @@ public class JreConcurrency implements Concurrency {
         final RejectedExecutionHandler rejectedExecutionHandler = new RejectedExecutionHandler() {
 
             @Override
-            public void rejectedExecution(final Runnable arg0,
-                    final ThreadPoolExecutor arg1) {
-                throw new RuntimeException(
-                        "Thread executor could not execute: [" + arg0 + "]. \n"
-                                + "  Executor: [" + arg1 + "]\n"
-                                + "  Thread owner: [" + threadName + "]");
+            public void rejectedExecution(final Runnable arg0, final ThreadPoolExecutor arg1) {
+                throw new RuntimeException("Thread executor could not execute: [" + arg0 + "]. \n" + "  Executor: ["
+                        + arg1 + "]\n" + "  Thread owner: [" + threadName + "]");
             }
         };
 
-        final ExecutorService executor = new ThreadPoolExecutor(capacity,
-                capacity, 50, TimeUnit.MILLISECONDS, workQueue, threadFactory,
-                rejectedExecutionHandler);
+        final ExecutorService executor = new ThreadPoolExecutor(capacity, capacity, 50, TimeUnit.MILLISECONDS,
+                workQueue, threadFactory, rejectedExecutionHandler);
         return executor;
     }
 
@@ -262,8 +246,7 @@ public class JreConcurrency implements Concurrency {
 
             @Override
             public Thread newThread(final Runnable r) {
-                return new Thread(Thread.currentThread().getThreadGroup(), r,
-                        threadName, 65536 * 8);
+                return new Thread(Thread.currentThread().getThreadGroup(), r, threadName, 65536 * 8);
             }
         };
         return threadFacory;
@@ -305,8 +288,7 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public boolean compareAndSet(final boolean expect,
-                    final boolean update) {
+            public boolean compareAndSet(final boolean expect, final boolean update) {
                 return wrapped.compareAndSet(expect, update);
             }
         };
