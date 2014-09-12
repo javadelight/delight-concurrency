@@ -101,6 +101,7 @@ public class JreConcurrency implements Concurrency {
                     @Override
                     public void run() {
                         runnable.run();
+                        javaTimer.cancel();
                     }
 
                 };
@@ -126,6 +127,7 @@ public class JreConcurrency implements Concurrency {
                     @Override
                     public void run() {
                         runnable.run();
+                        javaTimer.cancel();
                     }
 
                 };
