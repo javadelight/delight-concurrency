@@ -151,7 +151,7 @@ public class JreConcurrency implements Concurrency {
 
     @Override
     public void runLater(final Runnable runnable) {
-        new Thread() {
+        new Thread("JreConcurrency.runLater-for-" + runnable.getClass()) {
 
             @Override
             public void run() {
