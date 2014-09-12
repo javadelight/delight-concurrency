@@ -95,7 +95,8 @@ public class JreConcurrency implements Concurrency {
             @Override
             public SimpleTimer scheduleOnce(final int when, final Runnable runnable) {
 
-                final java.util.Timer javaTimer = new java.util.Timer("SimpleTimer-for-" + runnable.getClass());
+                final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
+                        + runnable.getClass());
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
@@ -121,7 +122,8 @@ public class JreConcurrency implements Concurrency {
 
             @Override
             public SimpleTimer scheduleRepeating(final int offsetInMs, final int intervallInMs, final Runnable runnable) {
-                final java.util.Timer javaTimer = new java.util.Timer();
+                final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
+                        + runnable.getClass());
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
