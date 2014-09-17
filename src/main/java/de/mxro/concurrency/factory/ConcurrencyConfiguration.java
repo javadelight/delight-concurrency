@@ -1,4 +1,4 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.factory;
 
 import de.mxro.factories.Configuration;
 
