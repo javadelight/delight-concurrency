@@ -219,7 +219,7 @@
 							<version>2.9.1</version>
 							<configuration>
 								<links>
-									
+									<link>http://modules.appjangle.com/factories/latest/apidocs/</link>
 								</links>
 							</configuration>
 						</plugin>
