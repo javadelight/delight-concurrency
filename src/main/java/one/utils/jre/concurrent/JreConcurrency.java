@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -124,8 +125,9 @@ public class JreConcurrency implements Concurrency {
 
             @Override
             public SimpleTimer scheduleRepeating(final int offsetInMs, final int intervallInMs, final Runnable runnable) {
-                final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
-                        + runnable.getClass());
+                final java.util.Timer javaTimer = new Timer();
+                // new java.util.Timer("JreConcurrency-SimpleTimer-for-"
+                // + runnable.getClass());
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
