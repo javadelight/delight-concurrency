@@ -99,6 +99,7 @@ public class JreConcurrency implements Concurrency {
 
                 final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
                         + runnable.getClass());
+
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
