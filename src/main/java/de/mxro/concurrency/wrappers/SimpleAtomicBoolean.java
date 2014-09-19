@@ -1,4 +1,4 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.wrappers;
 
 public interface SimpleAtomicBoolean {
 

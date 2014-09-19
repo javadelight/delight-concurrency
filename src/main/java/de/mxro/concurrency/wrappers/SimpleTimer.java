@@ -1,4 +1,4 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.wrappers;
 
 /**
  * A simple timer interface, allows the timer to be stopped.

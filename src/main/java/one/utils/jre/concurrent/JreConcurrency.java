@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-import de.mxro.concurrency.CollectionFactory;
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.Executor;
-import de.mxro.concurrency.ExecutorFactory;
-import de.mxro.concurrency.Lock;
-import de.mxro.concurrency.SimpleAtomicBoolean;
-import de.mxro.concurrency.SimpleTimer;
-import de.mxro.concurrency.TimerFactory;
+import de.mxro.concurrency.factories.CollectionFactory;
+import de.mxro.concurrency.factories.ExecutorFactory;
+import de.mxro.concurrency.factories.TimerFactory;
+import de.mxro.concurrency.wrappers.SimpleLock;
+import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
+import de.mxro.concurrency.wrappers.SimpleTimer;
 
 public class JreConcurrency implements Concurrency {
 
@@ -162,9 +162,9 @@ public class JreConcurrency implements Concurrency {
     }
 
     @Override
-    public Lock newLock() {
+    public SimpleLock newLock() {
 
-        return new Lock() {
+        return new SimpleLock() {
             private final ReentrantLock lock = new ReentrantLock();
 
             @Override

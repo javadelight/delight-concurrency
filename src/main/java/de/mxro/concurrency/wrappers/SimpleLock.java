@@ -1,4 +1,4 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.wrappers;
 
 /**
  * A simple lock implementation.
@@ -6,7 +6,7 @@ package de.mxro.concurrency;
  * @author Max
  * 
  */
-public interface Lock {
+public interface SimpleLock {
 
 	public abstract void lock();
 

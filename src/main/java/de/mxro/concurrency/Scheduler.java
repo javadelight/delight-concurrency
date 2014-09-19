@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.mxro.concurrency.wrappers.SimpleTimer;
+
 /**
  * Enables to schedule items in a fixed number of intervals.
  * 

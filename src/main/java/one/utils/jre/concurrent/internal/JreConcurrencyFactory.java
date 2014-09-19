@@ -2,7 +2,7 @@ package one.utils.jre.concurrent.internal;
 
 import one.utils.jre.concurrent.JreConcurrency;
 import de.mxro.concurrency.Concurrency;
-import de.mxro.concurrency.factory.ConcurrencyConfiguration;
+import de.mxro.concurrency.configuration.ConcurrencyConfiguration;
 import de.mxro.factories.Configuration;
 import de.mxro.factories.Dependencies;
 import de.mxro.factories.Factory;

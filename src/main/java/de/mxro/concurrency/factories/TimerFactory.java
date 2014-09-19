@@ -1,4 +1,6 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.factories;
+
+import de.mxro.concurrency.wrappers.SimpleTimer;
 
 /**
  * Simple factory to create timers for repeating and non-repeating tasks.

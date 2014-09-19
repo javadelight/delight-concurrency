@@ -1,4 +1,6 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.factories;
+
+import de.mxro.concurrency.Executor;
 
 public interface ExecutorFactory {
 

@@ -1,4 +1,4 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.factories;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package de.mxro.concurrency.factory;
+package de.mxro.concurrency.configuration;
 
 public class ConcurrencyConfigurations {
 
