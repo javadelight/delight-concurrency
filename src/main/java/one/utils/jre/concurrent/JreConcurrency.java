@@ -18,15 +18,17 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.factories.CollectionFactory;
 import de.mxro.concurrency.factories.ExecutorFactory;
 import de.mxro.concurrency.factories.TimerFactory;
+import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
+import de.mxro.concurrency.wrappers.SimpleAtomicInteger;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
 import de.mxro.concurrency.wrappers.SimpleLock;
-import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
 import de.mxro.concurrency.wrappers.SimpleTimer;
 
 public class JreConcurrency implements Concurrency {
@@ -294,6 +296,35 @@ public class JreConcurrency implements Concurrency {
             @Override
             public boolean compareAndSet(final boolean expect, final boolean update) {
                 return wrapped.compareAndSet(expect, update);
+            }
+        };
+    }
+
+    @Override
+    public SimpleAtomicInteger newAtomicInteger(final int value) {
+
+        return new SimpleAtomicInteger() {
+
+            private final AtomicInteger wrapped = new AtomicInteger(value);
+
+            @Override
+            public void set(final int newValue) {
+                wrapped.set(newValue);
+            }
+
+            @Override
+            public int incementAndGet() {
+                return wrapped.incrementAndGet();
+            }
+
+            @Override
+            public int getAndSet(final int newValue) {
+                return wrapped.getAndSet(newValue);
+            }
+
+            @Override
+            public int get() {
+                return wrapped.get();
             }
         };
     }
