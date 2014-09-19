@@ -130,7 +130,7 @@ public class JreConcurrency implements Concurrency {
 
                     @Override
                     public void run() {
-                        System.out.println("running it " + runnable);
+
                         runnable.run();
 
                     }
