@@ -313,7 +313,7 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public int incementAndGet() {
+            public int incrementAndGet() {
                 return wrapped.incrementAndGet();
             }
 
@@ -325,6 +325,11 @@ public class JreConcurrency implements Concurrency {
             @Override
             public int get() {
                 return wrapped.get();
+            }
+
+            @Override
+            public int decrementAndGet() {
+                return wrapped.decrementAndGet();
             }
         };
     }
