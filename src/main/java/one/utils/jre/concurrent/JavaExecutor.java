@@ -4,9 +4,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.mxro.concurrency.Executor;
+import de.mxro.concurrency.wrappers.SimpleExecutor;
 
-public class JavaExecutor implements Executor {
+public class JavaExecutor implements SimpleExecutor {
 	private final ExecutorService executor;
 
 	Thread lastThread;

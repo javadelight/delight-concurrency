@@ -4,10 +4,10 @@ public interface SimpleAtomicInteger {
 
     public int incementAndGet();
 
-    public boolean get();
+    public int get();
 
-    public boolean getAndSet(boolean newValue);
+    public int getAndSet(int newValue);
 
-    public void set(boolean newValue);
+    public void set(int newValue);
 
 }

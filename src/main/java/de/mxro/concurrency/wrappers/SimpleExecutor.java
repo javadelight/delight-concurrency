@@ -1,6 +1,6 @@
-package de.mxro.concurrency;
+package de.mxro.concurrency.wrappers;
 
-public interface Executor {
+public interface SimpleExecutor {
 
 	/**
 	 * Returns an object representing the thread used to execute the runnable if

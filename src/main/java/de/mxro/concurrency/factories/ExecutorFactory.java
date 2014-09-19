@@ -1,6 +1,6 @@
 package de.mxro.concurrency.factories;
 
-import de.mxro.concurrency.Executor;
+import de.mxro.concurrency.wrappers.SimpleExecutor;
 
 public interface ExecutorFactory {
 
@@ -9,7 +9,7 @@ public interface ExecutorFactory {
 	 * 
 	 * @return
 	 */
-	public abstract Executor newSingleThreadExecutor(Object owner);
+	public abstract SimpleExecutor newSingleThreadExecutor(Object owner);
 
 	/**
 	 * Will execute commands in a number of parallel threads.
@@ -18,7 +18,7 @@ public interface ExecutorFactory {
 	 * @param maxParallelThreads
 	 * @return
 	 */
-	public abstract Executor newParallelExecutor(int maxParallelThreads,
+	public abstract SimpleExecutor newParallelExecutor(int maxParallelThreads,
 			final Object owner);
 
 	/**
@@ -27,6 +27,6 @@ public interface ExecutorFactory {
 	 * 
 	 * @return
 	 */
-	public abstract Executor newImmideateExecutor();
+	public abstract SimpleExecutor newImmideateExecutor();
 
 }

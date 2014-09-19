@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 import de.mxro.concurrency.Concurrency;
-import de.mxro.concurrency.Executor;
 import de.mxro.concurrency.factories.CollectionFactory;
 import de.mxro.concurrency.factories.ExecutorFactory;
 import de.mxro.concurrency.factories.TimerFactory;
+import de.mxro.concurrency.wrappers.SimpleExecutor;
 import de.mxro.concurrency.wrappers.SimpleLock;
 import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
 import de.mxro.concurrency.wrappers.SimpleTimer;
@@ -48,22 +48,22 @@ public class JreConcurrency implements Concurrency {
         return new ExecutorFactory() {
 
             @Override
-            public Executor newSingleThreadExecutor(final Object owner) {
+            public SimpleExecutor newSingleThreadExecutor(final Object owner) {
                 final ExecutorService executor = newExecutor(1, owner);
 
                 return new JavaExecutor(executor);
             }
 
             @Override
-            public Executor newParallelExecutor(final int maxParallelThreads, final Object owner) {
+            public SimpleExecutor newParallelExecutor(final int maxParallelThreads, final Object owner) {
                 final ExecutorService executor = newExecutor(maxParallelThreads, owner);
 
                 return new JavaExecutor(executor);
             }
 
             @Override
-            public Executor newImmideateExecutor() {
-                return new Executor() {
+            public SimpleExecutor newImmideateExecutor() {
+                return new SimpleExecutor() {
 
                     @Override
                     public Object execute(final Runnable runnable) {
