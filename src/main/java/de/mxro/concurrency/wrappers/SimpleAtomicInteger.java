@@ -2,7 +2,7 @@ package de.mxro.concurrency.wrappers;
 
 public interface SimpleAtomicInteger {
 
-    public int incementAndGet();
+    public int incrementAndGet();
 
     public int get();
 
