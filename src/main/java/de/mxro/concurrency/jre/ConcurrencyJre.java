@@ -1,7 +1,7 @@
-package one.utils.jre.concurrent;
+package de.mxro.concurrency.jre;
 
-import one.utils.jre.concurrent.internal.JreConcurrencyFactory;
 import de.mxro.concurrency.Concurrency;
+import de.mxro.concurrency.jre.internal.JreConcurrencyFactory;
 import de.mxro.factories.Factory;
 
 public class ConcurrencyJre {

@@ -1,4 +1,4 @@
-package one.utils.jre.concurrent;
+package de.mxro.concurrency.jre;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
