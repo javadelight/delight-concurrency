@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<artifactId>concurrency-api</artifactId>
 	<groupId>de.mxro.concurrency</groupId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.3</version>
 	<description>An abstract and lightweight definition of Concurrency.</description>
 	<url>https://github.com/mxro/concurrency-api</url>
 	<properties>
