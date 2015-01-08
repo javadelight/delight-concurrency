@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import de.mxro.async.callbacks.SimpleCallback;
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.schedule.AccessThread;
-import de.mxro.concurrency.schedule.ShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
@@ -211,13 +211,13 @@ public class BetterAccessThreadImplementation implements AccessThread {
     }
 
     @Override
-    public void shutdown(final ShutdownCallback callback) {
+    public void shutdown(final SimpleCallback callback) {
         this.requestShutdown(new QueueShutdownCallback() {
 
             @Override
             public void onShutdown() {
 
-                callback.onShutdownComplete();
+                callback.onSuccess();
             }
 
             @Override
@@ -312,10 +312,10 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
             @Override
             public void stop(final ThreadStoppedCallback callback) {
-                BetterAccessThreadImplementation.this.shutdown(new ShutdownCallback() {
+                BetterAccessThreadImplementation.this.shutdown(new SimpleCallback() {
 
                     @Override
-                    public void onShutdownComplete() {
+                    public void onSuccess() {
                         callback.onSuccess();
                     }
 

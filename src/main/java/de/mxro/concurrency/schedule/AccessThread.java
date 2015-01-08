@@ -1,5 +1,6 @@
 package de.mxro.concurrency.schedule;
 
+import de.mxro.async.callbacks.SimpleCallback;
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
@@ -14,7 +15,7 @@ import de.mxro.concurrency.wrappers.SimpleExecutor;
  */
 public interface AccessThread {
 
-    public void shutdown(final ShutdownCallback callback);
+    public void shutdown(final SimpleCallback callback);
 
     public Concurrency getConcurrency();
 
