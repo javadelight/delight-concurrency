@@ -3,7 +3,6 @@ package de.mxro.concurrency.schedule;
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
-import de.mxro.concurrency.schedule.ThreadSpace.Step;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
 
 /**

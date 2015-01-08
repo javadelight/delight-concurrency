@@ -8,11 +8,11 @@ import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.schedule.AccessThread;
 import de.mxro.concurrency.schedule.ShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker;
-import de.mxro.concurrency.schedule.SingleInstanceThread;
-import de.mxro.concurrency.schedule.ThreadSpace;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
-import de.mxro.concurrency.schedule.ThreadSpace.Step;
+import de.mxro.concurrency.schedule.SingleInstanceThread;
+import de.mxro.concurrency.schedule.Step;
+import de.mxro.concurrency.schedule.ThreadSpace;
 import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
 import de.mxro.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
@@ -29,16 +29,12 @@ public class BetterAccessThreadImplementation implements AccessThread {
     private final List<WhenProcessed> finalizedListener;
 
     Object workerThread;
-    // can change
     final SimpleAtomicBoolean running;
 
     final SimpleAtomicBoolean shutdownRequested;
     final SimpleAtomicBoolean isShutDown;
 
     private volatile QueueShutdownCallback shutDowncallback;
-
-    // private volatile long lastCall;
-    // private final long maxCalltime;
 
     @Override
     public void offer(final Step item) {

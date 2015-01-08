@@ -19,10 +19,6 @@ import java.util.List;
 @Deprecated
 public class ThreadSpace {
 
-    public static interface Step {
-        public void process();
-    }
-
     protected final List<Step> steps;
 
     protected volatile boolean processing;
