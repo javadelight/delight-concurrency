@@ -37,8 +37,6 @@ public interface AccessThread {
 
     public SimpleExecutor getExecutor();
 
-    // public void run(final Notifiyer callWhenFinished);
-
     /**
      * Gets the underlying system thread.
      * 
