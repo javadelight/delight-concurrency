@@ -1,4 +1,4 @@
-package de.mxro.concurrency.internal;
+package de.mxro.concurrency.schedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,6 @@ import java.util.Queue;
 
 import de.mxro.async.callbacks.SimpleCallback;
 import de.mxro.concurrency.Concurrency;
-import de.mxro.concurrency.schedule.AccessThread;
-import de.mxro.concurrency.schedule.SingleInstanceQueueWorker;
-import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
-import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
-import de.mxro.concurrency.schedule.SingleInstanceThread;
-import de.mxro.concurrency.schedule.Step;
-import de.mxro.concurrency.schedule.ThreadSpace;
 import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
 import de.mxro.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
