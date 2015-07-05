@@ -1,10 +1,11 @@
 package de.mxro.concurrency.schedule;
 
+import delight.async.callbacks.SimpleCallback;
+
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
 import de.mxro.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
-import delight.async.callbacks.SimpleCallback;
 
 /**
  * Used to ensure that there is only one thread working on a client at any one

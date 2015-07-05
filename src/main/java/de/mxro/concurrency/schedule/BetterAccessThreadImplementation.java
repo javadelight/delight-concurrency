@@ -1,5 +1,7 @@
 package de.mxro.concurrency.schedule;
 
+import delight.async.callbacks.SimpleCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -11,7 +13,6 @@ import de.mxro.concurrency.wrappers.SimpleAtomicBoolean;
 import de.mxro.concurrency.wrappers.SimpleExecutor;
 import de.mxro.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
 import de.mxro.concurrency.wrappers.SimpleLock;
-import delight.async.callbacks.SimpleCallback;
 
 public class BetterAccessThreadImplementation implements AccessThread {
 
