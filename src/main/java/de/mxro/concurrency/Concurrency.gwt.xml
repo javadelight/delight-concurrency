@@ -4,7 +4,7 @@
 	<!-- Inherit the core Web Toolkit stuff. -->
 	<inherits name='com.google.gwt.user.User' />
 
-	<inherits name='de.mxro.factories.Factories' />
+	<inherits name='delight.factories.Factories' />
 
 	<!-- Other module inherits -->
 	<!-- <inherits name='com.google.common.Guava'></inherits> -->

@@ -1,8 +1,9 @@
 package de.mxro.concurrency.jre;
 
+import delight.factories.Factory;
+
 import de.mxro.concurrency.Concurrency;
 import de.mxro.concurrency.jre.internal.JreConcurrencyFactory;
-import de.mxro.factories.Factory;
 
 public class ConcurrencyJre {
 
