@@ -13,7 +13,7 @@
 			org.junit,
 			*
 		</module.importedPackages>
-		<module.exportedPackages>!de.mxro.concurrency.internal*,de.mxro.concurrency*
+		<module.exportedPackages>!delight.concurrency.internal*,delight.concurrency*
 		</module.exportedPackages>
 		<module.serviceDefinitions>
 		</module.serviceDefinitions>
