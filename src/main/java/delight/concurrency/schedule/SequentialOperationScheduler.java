@@ -179,6 +179,7 @@ public class SequentialOperationScheduler {
         this.shuttingDown = new Value<Boolean>(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
+        this.suspendCount = concurrency.newAtomicInteger(0);
     }
 
 }
