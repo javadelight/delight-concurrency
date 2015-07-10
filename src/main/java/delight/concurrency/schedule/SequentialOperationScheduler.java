@@ -20,25 +20,47 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
-    public void <R> schedule(final Operation<R> operation, final ValueCallback<R> callback) {
+    public <R> void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
             if (shuttingDown.get()) {
                 throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
             }
         }
         synchronized (scheduled) {
-            scheduled.add(new OperationEntry<R>(operation, callback));
+            scheduled.add(new OperationEntry<Object>(new Operation<R>() {
+
+                @Override
+                public void apply(final ValueCallback<R> callback) {
+
+                }
+            }, new ValueCallback<R>() {
+
+                @Override
+                public void onFailure(final Throwable t) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onSuccess(final R value) {
+                    // TODO Auto-generated method stub
+
+                }
+            }));
         }
     }
 
-    private final Runnable runIfRequiredRunnable=new Runnable(){
+    private final Runnable runIfRequiredRunnable = new Runnable() {
 
-    @Override public void run(){runIfRequired();}
+        @Override
+        public void run() {
+            runIfRequired();
+        }
 
     };
 
     private final void runIfRequired() {
-        OperationEntry<R> entry = null;
+        OperationEntry<Object> entry = null;
         synchronized (running) {
             if (running.get() == false) {
                 running.set(true);
@@ -56,8 +78,8 @@ public class SequentialOperationScheduler {
         }
 
         if (entry != null) {
-            final OperationEntry<R> entryClosed = entry;
-            entry.operation.apply(new ValueCallback<R>() {
+            final OperationEntry<Object> entryClosed = entry;
+            entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
                 public void onFailure(final Throwable t) {
@@ -66,7 +88,7 @@ public class SequentialOperationScheduler {
                 }
 
                 @Override
-                public void onSuccess(final R value) {
+                public void onSuccess(final Object value) {
                     entryClosed.callback.onSuccess(value);
                     executorForIndirectCalls.execute(runIfRequiredRunnable);
                 }
