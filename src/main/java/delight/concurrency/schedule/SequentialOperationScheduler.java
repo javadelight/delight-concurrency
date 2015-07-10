@@ -22,8 +22,19 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
+    private final Object blocker = new Object();
+
     public void blockIfActive() {
 
+        synchronized (running) {
+            if (running.get()) {
+                try {
+                    blocker.wait();
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     public boolean isRunning() {
