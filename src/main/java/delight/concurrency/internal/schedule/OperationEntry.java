@@ -6,7 +6,7 @@ import delight.async.callbacks.ValueCallback;
 public class OperationEntry<R> {
 
     public final Operation<R> operation;
-    publi final ValueCallback<R> callback;
+    public final ValueCallback<R> callback;
 
     public OperationEntry(final Operation<R> operation, final ValueCallback<R> callback) {
         super();
