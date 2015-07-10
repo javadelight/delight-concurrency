@@ -28,6 +28,11 @@ public class SequentialOperationScheduler {
         }
     }
 
+    /**
+     * If its NOT running and CAN be suspended, return true.
+     * 
+     * @return
+     */
     public boolean suspendIfNotRunning() {
         synchronized (running) {
             if (!running.get()) {
