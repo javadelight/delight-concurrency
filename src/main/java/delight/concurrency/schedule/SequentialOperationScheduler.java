@@ -28,6 +28,17 @@ public class SequentialOperationScheduler {
         }
     }
 
+    public boolean suspendIfNotRunning() {
+        synchronized (running) {
+            if (!running.get()) {
+                suspend();
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public void suspend() {
         suspendCount.incrementAndGet();
     }
