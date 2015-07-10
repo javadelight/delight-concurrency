@@ -20,6 +20,7 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
+    @SuppressWarnings("unchecked")
     public <R> void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
             if (shuttingDown.get()) {
@@ -27,13 +28,7 @@ public class SequentialOperationScheduler {
             }
         }
         synchronized (scheduled) {
-            scheduled.add(new OperationEntry<Object>(new Operation<Object>() {
-
-                @Override
-                public void apply(final ValueCallback<Object> callback) {
-                    operation.apply((ValueCallback<R>) callback);
-                }
-            }, new ValueCallback<Object>() {
+            scheduled.add(new OperationEntry<Object>((Operation<Object>) operation, new ValueCallback<Object>() {
 
                 @Override
                 public void onFailure(final Throwable t) {
@@ -42,8 +37,7 @@ public class SequentialOperationScheduler {
 
                 @Override
                 public void onSuccess(final Object value) {
-                    // TODO Auto-generated method stub
-
+                    callback.onSuccess((R) value);
                 }
             }));
         }
