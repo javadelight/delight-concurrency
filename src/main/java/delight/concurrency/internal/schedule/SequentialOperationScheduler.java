@@ -39,13 +39,18 @@ public class SequentialOperationScheduler<R> {
 
     };
 
-    public void runIfRequired() {
+    private final void runIfRequired() {
         OperationEntry<R> entry = null;
         synchronized (running) {
             if (running.get() == false) {
                 running.set(true);
 
                 synchronized (scheduled) {
+                    if (scheduled.size() == 0) {
+                        running.set(false);
+                        tryShutdown();
+                        return;
+                    }
                     entry = scheduled.pop();
                 }
 
