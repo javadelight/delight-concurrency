@@ -80,10 +80,19 @@ public class SequentialOperationScheduler<R> {
 
             shuttingDown.set(true);
         }
-        shutdownInternal(cb);
+
+        shutdownCallback.set(cb);
+
+        tryShutdown();
     }
 
-    private final void shutdownInternal(final ValueCallback<Success> cb) {
+    private final void tryShutdown() {
+
+        synchronized (shuttingDown) {
+            if (!shuttingDown.get()) {
+                return;
+            }
+        }
 
         synchronized (running) {
             if (running.get() == false) {
@@ -93,12 +102,12 @@ public class SequentialOperationScheduler<R> {
 
                             @Override
                             public void thenDo() {
-                                cb.onSuccess(Success.INSTANCE);
+                                shutdownCallback.get().onSuccess(Success.INSTANCE);
                             }
 
                             @Override
                             public void onFailure(final Throwable t) {
-                                cb.onFailure(t);
+                                shutdownCallback.get().onFailure(t);
                             }
                         });
                         return;
