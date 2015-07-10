@@ -23,7 +23,7 @@ public class SequentialOperationScheduler<R> {
     public void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
             if (shuttingDown.get()) {
-
+                throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
             }
         }
         synchronized (scheduled) {
