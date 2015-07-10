@@ -22,6 +22,10 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
+    public void blockIfActive() {
+
+    }
+
     public boolean isRunning() {
         synchronized (running) {
             return running.get();
@@ -180,6 +184,7 @@ public class SequentialOperationScheduler {
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
         this.suspendCount = concurrency.newAtomicInteger(0);
+
     }
 
 }
