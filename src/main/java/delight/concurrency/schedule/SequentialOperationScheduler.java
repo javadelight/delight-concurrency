@@ -5,6 +5,7 @@ import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.internal.schedule.OperationEntry;
+import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
 import delight.functional.Success;
@@ -17,6 +18,7 @@ public class SequentialOperationScheduler {
     private final SimpleExecutor executorForIndirectCalls;
     private final Value<Boolean> running;
     private final Value<Boolean> shuttingDown;
+    private final SimpleAtomicInteger suspendCount;
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
@@ -24,6 +26,14 @@ public class SequentialOperationScheduler {
         synchronized (running) {
             return running.get();
         }
+    }
+
+    public void suspend() {
+        suspendCount.incrementAndGet();
+    }
+
+    public void resume() {
+        suspendCount.decrementAndGet();
     }
 
     @SuppressWarnings("unchecked")
