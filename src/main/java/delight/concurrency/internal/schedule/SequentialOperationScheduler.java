@@ -1,0 +1,120 @@
+package delight.concurrency.internal.schedule;
+
+import delight.async.Operation;
+import delight.async.Value;
+import delight.async.callbacks.ValueCallback;
+import delight.concurrency.Concurrency;
+import delight.concurrency.wrappers.SimpleExecutor;
+import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.functional.Success;
+
+import java.util.LinkedList;
+
+public class SequentialOperationScheduler<R> {
+
+    private final LinkedList<OperationEntry<R>> scheduled;
+
+    private final SimpleExecutor executorForIndirectCalls;
+
+    private final Value<Boolean> running;
+
+    private final Value<Boolean> shuttingDown;
+
+    public void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
+        synchronized (shuttingDown) {
+            if (shuttingDown.get()) {
+
+            }
+        }
+        synchronized (scheduled) {
+            scheduled.add(new OperationEntry<R>(operation, callback));
+        }
+    }
+
+    private final Runnable runIfRequiredRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            runIfRequired();
+        }
+
+    };
+
+    public void runIfRequired() {
+        OperationEntry<R> entry = null;
+        synchronized (running) {
+            if (running.get() == false) {
+                running.set(true);
+
+                synchronized (scheduled) {
+                    entry = scheduled.pop();
+                }
+
+            }
+        }
+
+        if (entry != null) {
+            final OperationEntry<R> entryClosed = entry;
+            entry.operation.apply(new ValueCallback<R>() {
+
+                @Override
+                public void onFailure(final Throwable t) {
+                    entryClosed.callback.onFailure(t);
+                    executorForIndirectCalls.execute(runIfRequiredRunnable);
+                }
+
+                @Override
+                public void onSuccess(final R value) {
+                    entryClosed.callback.onSuccess(value);
+                    executorForIndirectCalls.execute(runIfRequiredRunnable);
+                }
+            });
+        }
+
+    }
+
+    public void shutdown(final ValueCallback<Success> cb) {
+        synchronized (shuttingDown) {
+            if (shuttingDown.get()) {
+                throw new IllegalStateException("Called shutdown for already shut down scheduler");
+            }
+
+            shuttingDown.set(true);
+        }
+        shutdownInternal(cb);
+    }
+
+    private final void shutdownInternal(final ValueCallback<Success> cb) {
+
+        synchronized (running) {
+            if (running.get() == false) {
+                synchronized (scheduled) {
+                    if (scheduled.isEmpty()) {
+                        this.executorForIndirectCalls.shutdown(new WhenExecutorShutDown() {
+
+                            @Override
+                            public void thenDo() {
+                                cb.onSuccess(Success.INSTANCE);
+                            }
+
+                            @Override
+                            public void onFailure(final Throwable t) {
+                                cb.onFailure(t);
+                            }
+                        });
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public SequentialOperationScheduler(final Concurrency concurrency) {
+        super();
+        this.scheduled = new LinkedList<OperationEntry<R>>();
+        this.running = new Value<Boolean>(false);
+        this.shuttingDown = new Value<Boolean>(false);
+        this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
+    }
+
+}
