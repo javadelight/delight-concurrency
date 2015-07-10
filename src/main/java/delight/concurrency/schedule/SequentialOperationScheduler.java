@@ -27,22 +27,21 @@ public class SequentialOperationScheduler {
             }
         }
         synchronized (scheduled) {
-            scheduled.add(new OperationEntry<Object>(new Operation<R>() {
+            scheduled.add(new OperationEntry<Object>(new Operation<Object>() {
 
                 @Override
-                public void apply(final ValueCallback<R> callback) {
-
+                public void apply(final ValueCallback<Object> callback) {
+                    operation.apply((ValueCallback<R>) callback);
                 }
-            }, new ValueCallback<R>() {
+            }, new ValueCallback<Object>() {
 
                 @Override
                 public void onFailure(final Throwable t) {
-                    // TODO Auto-generated method stub
-
+                    callback.onFailure(t);
                 }
 
                 @Override
-                public void onSuccess(final R value) {
+                public void onSuccess(final Object value) {
                     // TODO Auto-generated method stub
 
                 }
