@@ -13,12 +13,11 @@ import java.util.LinkedList;
 public class SequentialOperationScheduler<R> {
 
     private final LinkedList<OperationEntry<R>> scheduled;
-
     private final SimpleExecutor executorForIndirectCalls;
-
     private final Value<Boolean> running;
-
     private final Value<Boolean> shuttingDown;
+
+    private final Value<ValueCallback<Success>> shutdownCallback;
 
     public void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
@@ -114,6 +113,7 @@ public class SequentialOperationScheduler<R> {
         this.scheduled = new LinkedList<OperationEntry<R>>();
         this.running = new Value<Boolean>(false);
         this.shuttingDown = new Value<Boolean>(false);
+        this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
     }
 
