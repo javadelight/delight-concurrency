@@ -34,6 +34,7 @@ public class SequentialOperationScheduler {
 
     public void resume() {
         suspendCount.decrementAndGet();
+        runIfRequired();
     }
 
     @SuppressWarnings("unchecked")
@@ -69,6 +70,10 @@ public class SequentialOperationScheduler {
     };
 
     private final void runIfRequired() {
+        if (suspendCount.get() > 0) {
+            return;
+        }
+
         OperationEntry<Object> entry = null;
         synchronized (running) {
             if (running.get() == false) {
