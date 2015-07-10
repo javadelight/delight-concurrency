@@ -20,6 +20,12 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
+    public boolean isRunning() {
+        synchronized (running) {
+            return running.get();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public <R> void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
