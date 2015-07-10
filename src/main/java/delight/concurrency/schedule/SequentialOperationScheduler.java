@@ -11,16 +11,16 @@ import delight.functional.Success;
 
 import java.util.LinkedList;
 
-public class SequentialOperationScheduler<R> {
+public class SequentialOperationScheduler {
 
-    private final LinkedList<OperationEntry<R>> scheduled;
+    private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
     private final Value<Boolean> running;
     private final Value<Boolean> shuttingDown;
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
-    public void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
+    public void <R> schedule(final Operation<R> operation, final ValueCallback<R> callback) {
         synchronized (shuttingDown) {
             if (shuttingDown.get()) {
                 throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
@@ -31,12 +31,9 @@ public class SequentialOperationScheduler<R> {
         }
     }
 
-    private final Runnable runIfRequiredRunnable = new Runnable() {
+    private final Runnable runIfRequiredRunnable=new Runnable(){
 
-        @Override
-        public void run() {
-            runIfRequired();
-        }
+    @Override public void run(){runIfRequired();}
 
     };
 
