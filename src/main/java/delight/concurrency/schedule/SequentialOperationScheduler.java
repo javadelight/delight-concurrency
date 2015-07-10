@@ -137,7 +137,7 @@ public class SequentialOperationScheduler {
 
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
-        this.scheduled = new LinkedList<OperationEntry<R>>();
+        this.scheduled = new LinkedList<OperationEntry<Object>>();
         this.running = new Value<Boolean>(false);
         this.shuttingDown = new Value<Boolean>(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
