@@ -179,6 +179,7 @@ public class SequentialOperationScheduler {
                 }
             }
         }
+
     }
 
     public SequentialOperationScheduler(final Concurrency concurrency) {
