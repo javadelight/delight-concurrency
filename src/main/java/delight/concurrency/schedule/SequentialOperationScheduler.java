@@ -110,7 +110,7 @@ public class SequentialOperationScheduler {
                         tryShutdown();
                         return;
                     }
-                    entry = scheduled.pop();
+                    entry = scheduled.removeFirst();
                 }
 
             }
