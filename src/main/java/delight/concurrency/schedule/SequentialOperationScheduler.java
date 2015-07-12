@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 public class SequentialOperationScheduler {
 
-    private static final boolean ENABLE_LOG = true;
+    private static final boolean ENABLE_LOG = false;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
@@ -95,7 +95,6 @@ public class SequentialOperationScheduler {
     };
 
     private final void runIfRequired() {
-        System.out.println("here");
 
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
@@ -113,19 +112,25 @@ public class SequentialOperationScheduler {
                 running.set(true);
 
                 synchronized (scheduled) {
-                    if (ENABLE_LOG) {
 
-                        System.out.println(this + ": Still to process " + scheduled.size());
-                    }
-                    if (scheduled.size() == 0) {
-
-                        running.set(false);
-                        tryShutdown();
-                        return;
-                    }
                     entry = scheduled.removeFirst();
                 }
 
+            } else {
+                if (ENABLE_LOG) {
+
+                    System.out.println(this + ": Still to process " + scheduled.size());
+                }
+                if (scheduled.size() == 0) {
+
+                    running.set(false);
+                    tryShutdown();
+                    return;
+                }
+                synchronized (scheduled) {
+
+                    entry = scheduled.removeFirst();
+                }
             }
         }
 
