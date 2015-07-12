@@ -99,7 +99,6 @@ public class SequentialOperationScheduler {
 
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
-
                 System.out.println(this + ": Is suspended ...");
             }
             return;
@@ -107,6 +106,9 @@ public class SequentialOperationScheduler {
 
         OperationEntry<Object> entry = null;
         synchronized (running) {
+            if (ENABLE_LOG) {
+                System.out.println(this + ": Running state [" + running.get() + "]");
+            }
             if (running.get() == false) {
                 running.set(true);
 
