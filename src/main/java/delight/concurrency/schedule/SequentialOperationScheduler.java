@@ -95,11 +95,6 @@ public class SequentialOperationScheduler {
     };
 
     private final void runIfRequired() {
-        synchronized (shuttingDown) {
-            if (shuttingDown.get()) {
-                tryShutdown();
-            }
-        }
 
         if (suspendCount.get() > 0) {
             return;
@@ -158,6 +153,10 @@ public class SequentialOperationScheduler {
 
     private final void tryShutdown() {
 
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Attempting shutdown .. ");
+        }
+
         synchronized (shuttingDown) {
             if (!shuttingDown.get()) {
                 return;
@@ -165,8 +164,14 @@ public class SequentialOperationScheduler {
         }
 
         synchronized (running) {
+            if (ENABLE_LOG) {
+                System.out.println(this + ": Attempting shutdown; running state: " + running.get());
+            }
             if (running.get() == false) {
                 synchronized (scheduled) {
+                    if (ENABLE_LOG) {
+                        System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
+                    }
                     if (scheduled.isEmpty()) {
                         this.executorForIndirectCalls.shutdown(new WhenExecutorShutDown() {
 
