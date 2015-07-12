@@ -97,6 +97,10 @@ public class SequentialOperationScheduler {
     private final void runIfRequired() {
 
         if (suspendCount.get() > 0) {
+            if (ENABLE_LOG) {
+
+                System.out.println(this + ": Is suspended ...");
+            }
             return;
         }
 
@@ -106,7 +110,12 @@ public class SequentialOperationScheduler {
                 running.set(true);
 
                 synchronized (scheduled) {
+                    if (ENABLE_LOG) {
+
+                        System.out.println(this + ": Still to process " + scheduled.size());
+                    }
                     if (scheduled.size() == 0) {
+
                         running.set(false);
                         tryShutdown();
                         return;
