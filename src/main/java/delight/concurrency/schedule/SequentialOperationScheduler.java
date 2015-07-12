@@ -95,6 +95,12 @@ public class SequentialOperationScheduler {
     };
 
     private final void runIfRequired() {
+        synchronized (shuttingDown) {
+            if (shuttingDown.get()) {
+                tryShutdown();
+            }
+        }
+
         if (suspendCount.get() > 0) {
             return;
         }
