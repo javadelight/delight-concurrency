@@ -14,6 +14,8 @@ import java.util.LinkedList;
 
 public class SequentialOperationScheduler {
 
+    private static final boolean ENABLE_LOG = true;
+
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
     private final Value<Boolean> running;
@@ -21,8 +23,6 @@ public class SequentialOperationScheduler {
     private final SimpleAtomicInteger suspendCount;
 
     private final Value<ValueCallback<Success>> shutdownCallback;
-
-    private final Object blocker = new Object();
 
     public boolean isRunning() {
         synchronized (running) {
@@ -63,6 +63,9 @@ public class SequentialOperationScheduler {
             }
         }
         synchronized (scheduled) {
+            if (ENABLE_LOG) {
+                System.out.println(this + ": Add operation " + operation);
+            }
             scheduled.add(new OperationEntry<Object>((Operation<Object>) operation, new ValueCallback<Object>() {
 
                 @Override
