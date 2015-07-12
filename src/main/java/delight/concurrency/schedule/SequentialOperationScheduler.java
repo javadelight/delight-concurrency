@@ -79,6 +79,7 @@ public class SequentialOperationScheduler {
                 }
             }));
         }
+        runIfRequired();
     }
 
     private final Runnable runIfRequiredRunnable = new Runnable() {
