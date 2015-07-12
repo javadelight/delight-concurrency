@@ -113,7 +113,7 @@ public class SequentialOperationScheduler {
 
                 synchronized (scheduled) {
 
-                    entry = scheduled.removeFirst();
+                    entry = scheduled.pop();
                 }
 
             } else {
