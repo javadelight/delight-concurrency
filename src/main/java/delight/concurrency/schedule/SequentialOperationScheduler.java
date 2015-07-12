@@ -95,6 +95,7 @@ public class SequentialOperationScheduler {
     };
 
     private final void runIfRequired() {
+        System.out.println("here");
 
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
