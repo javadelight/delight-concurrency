@@ -5,6 +5,7 @@ import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.internal.schedule.OperationEntry;
+import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
@@ -21,6 +22,7 @@ public class SequentialOperationScheduler {
     private final Value<Boolean> running;
     private final Value<Boolean> shuttingDown;
     private final SimpleAtomicInteger suspendCount;
+    private final SimpleAtomicBoolean operationInProgress;
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
@@ -136,6 +138,7 @@ public class SequentialOperationScheduler {
 
         if (entry != null) {
             final OperationEntry<Object> entryClosed = entry;
+            this.operationInProgress.set(true);
             entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
