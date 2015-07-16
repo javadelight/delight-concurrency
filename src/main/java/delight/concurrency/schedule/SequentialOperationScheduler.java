@@ -98,6 +98,10 @@ public class SequentialOperationScheduler {
 
     private final void runIfRequired() {
 
+        if (operationInProgress.get()) {
+            return;
+        }
+
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
                 System.out.println(this + ": Is suspended ...");
