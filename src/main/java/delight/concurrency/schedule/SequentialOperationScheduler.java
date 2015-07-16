@@ -19,8 +19,8 @@ public class SequentialOperationScheduler {
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
-    private final Value<Boolean> running;
-    private final Value<Boolean> shuttingDown;
+    private final SimpleAtomicBoolean running;
+    private final SimpleAtomicBoolean shuttingDown;
     private final SimpleAtomicInteger suspendCount;
     private final SimpleAtomicBoolean operationInProgress;
 
