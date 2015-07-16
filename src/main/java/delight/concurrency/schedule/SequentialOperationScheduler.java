@@ -123,6 +123,10 @@ public class SequentialOperationScheduler {
                 entry = scheduled.pollFirst();
             }
 
+            if (entry == null) {
+                running.set(false);
+            }
+
         } else {
             if (ENABLE_LOG) {
 
