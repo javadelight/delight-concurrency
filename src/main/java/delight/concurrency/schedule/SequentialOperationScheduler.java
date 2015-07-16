@@ -143,6 +143,10 @@ public class SequentialOperationScheduler {
         if (entry != null) {
             final OperationEntry<Object> entryClosed = entry;
             this.operationInProgress.set(true);
+
+            if (ENABLE_LOG) {
+                System.out.println(this + ": Execute operation " + entry.operation);
+            }
             entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
