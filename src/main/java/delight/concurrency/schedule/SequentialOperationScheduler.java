@@ -78,7 +78,8 @@ public class SequentialOperationScheduler {
                 @Override
                 public void onSuccess(final Object value) {
                     if (ENABLE_LOG) {
-                        System.out.println(this + ": Operation successful " + operation + " returns [" + value + "]");
+                        System.out.println(SequentialOperationScheduler.this + ": Operation successful " + operation
+                                + " returns [" + value + "]");
                     }
                     callback.onSuccess((R) value);
                 }
