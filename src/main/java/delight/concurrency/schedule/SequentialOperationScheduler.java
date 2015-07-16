@@ -125,6 +125,8 @@ public class SequentialOperationScheduler {
 
             if (entry == null) {
                 running.set(false);
+                tryShutdown();
+                return;
             }
 
         } else {
