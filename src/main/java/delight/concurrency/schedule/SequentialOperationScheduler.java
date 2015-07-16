@@ -144,12 +144,14 @@ public class SequentialOperationScheduler {
                 @Override
                 public void onFailure(final Throwable t) {
                     entryClosed.callback.onFailure(t);
+                    operationInProgress.set(false);
                     executorForIndirectCalls.execute(runIfRequiredRunnable);
                 }
 
                 @Override
                 public void onSuccess(final Object value) {
                     entryClosed.callback.onSuccess(value);
+                    operationInProgress.set(false);
                     executorForIndirectCalls.execute(runIfRequiredRunnable);
                 }
             });
