@@ -165,13 +165,12 @@ public class SequentialOperationScheduler {
     }
 
     public void shutdown(final ValueCallback<Success> cb) {
-        synchronized (shuttingDown) {
-            if (shuttingDown.get()) {
-                throw new IllegalStateException("Called shutdown for already shut down scheduler");
-            }
 
-            shuttingDown.set(true);
+        if (shuttingDown.get()) {
+            throw new IllegalStateException("Called shutdown for already shut down scheduler");
         }
+
+        shuttingDown.set(true);
 
         shutdownCallback.set(cb);
 
@@ -184,36 +183,32 @@ public class SequentialOperationScheduler {
             System.out.println(this + ": Attempting shutdown .. ");
         }
 
-        synchronized (shuttingDown) {
-            if (!shuttingDown.get()) {
-                return;
-            }
+        if (!shuttingDown.get()) {
+            return;
         }
 
-        synchronized (running) {
-            if (ENABLE_LOG) {
-                System.out.println(this + ": Attempting shutdown; running state: " + running.get());
-            }
-            if (running.get() == false) {
-                synchronized (scheduled) {
-                    if (ENABLE_LOG) {
-                        System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
-                    }
-                    if (scheduled.isEmpty()) {
-                        this.executorForIndirectCalls.shutdown(new WhenExecutorShutDown() {
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Attempting shutdown; running state: " + running.get());
+        }
+        if (running.get() == false) {
+            synchronized (scheduled) {
+                if (ENABLE_LOG) {
+                    System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
+                }
+                if (scheduled.isEmpty()) {
+                    this.executorForIndirectCalls.shutdown(new WhenExecutorShutDown() {
 
-                            @Override
-                            public void thenDo() {
-                                shutdownCallback.get().onSuccess(Success.INSTANCE);
-                            }
+                        @Override
+                        public void thenDo() {
+                            shutdownCallback.get().onSuccess(Success.INSTANCE);
+                        }
 
-                            @Override
-                            public void onFailure(final Throwable t) {
-                                shutdownCallback.get().onFailure(t);
-                            }
-                        });
-                        return;
-                    }
+                        @Override
+                        public void onFailure(final Throwable t) {
+                            shutdownCallback.get().onFailure(t);
+                        }
+                    });
+                    return;
                 }
             }
         }
