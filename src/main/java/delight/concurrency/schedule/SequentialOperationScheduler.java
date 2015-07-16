@@ -38,14 +38,14 @@ public class SequentialOperationScheduler {
      * @return
      */
     public boolean suspendIfNotRunning() {
-        synchronized (running) {
-            if (!running.get()) {
-                suspend();
-                return true;
-            }
 
-            return false;
+        if (!running.get()) {
+            suspend();
+            return true;
         }
+
+        return false;
+
     }
 
     public void suspend() {
@@ -59,11 +59,11 @@ public class SequentialOperationScheduler {
 
     @SuppressWarnings("unchecked")
     public <R> void schedule(final Operation<R> operation, final ValueCallback<R> callback) {
-        synchronized (shuttingDown) {
-            if (shuttingDown.get()) {
-                throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
-            }
+
+        if (shuttingDown.get()) {
+            throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
         }
+
         synchronized (scheduled) {
             if (ENABLE_LOG) {
                 System.out.println(this + ": Add operation " + operation);
@@ -110,33 +110,32 @@ public class SequentialOperationScheduler {
         }
 
         OperationEntry<Object> entry = null;
-        synchronized (running) {
-            if (ENABLE_LOG) {
-                System.out.println(this + ": Running state [" + running.get() + "]");
+
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Running state [" + running.get() + "]");
+        }
+        if (running.get() == false) {
+            running.set(true);
+
+            synchronized (scheduled) {
+
+                entry = scheduled.pollFirst();
             }
-            if (running.get() == false) {
-                running.set(true);
 
-                synchronized (scheduled) {
+        } else {
+            if (ENABLE_LOG) {
 
-                    entry = scheduled.pollFirst();
-                }
+                System.out.println(this + ": Still to process " + scheduled.size());
+            }
+            if (scheduled.size() == 0) {
 
-            } else {
-                if (ENABLE_LOG) {
+                running.set(false);
+                tryShutdown();
+                return;
+            }
+            synchronized (scheduled) {
 
-                    System.out.println(this + ": Still to process " + scheduled.size());
-                }
-                if (scheduled.size() == 0) {
-
-                    running.set(false);
-                    tryShutdown();
-                    return;
-                }
-                synchronized (scheduled) {
-
-                    entry = scheduled.pollFirst();
-                }
+                entry = scheduled.pollFirst();
             }
         }
 
@@ -224,8 +223,8 @@ public class SequentialOperationScheduler {
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
         this.scheduled = new LinkedList<OperationEntry<Object>>();
-        this.running = new Value<Boolean>(false);
-        this.shuttingDown = new Value<Boolean>(false);
+        this.running = concurrency.newAtomicBoolean(false);
+        this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
         this.suspendCount = concurrency.newAtomicInteger(0);
