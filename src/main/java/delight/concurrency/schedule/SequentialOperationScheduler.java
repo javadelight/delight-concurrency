@@ -21,6 +21,7 @@ public class SequentialOperationScheduler {
     private final SimpleExecutor executorForIndirectCalls;
     private final SimpleAtomicBoolean running;
     private final SimpleAtomicBoolean shuttingDown;
+    private final SimpleAtomicBoolean shutDown;
     private final SimpleAtomicInteger suspendCount;
     private final SimpleAtomicBoolean operationInProgress;
 
@@ -214,7 +215,10 @@ public class SequentialOperationScheduler {
 
                         @Override
                         public void thenDo() {
-                            shutdownCallback.get().onSuccess(Success.INSTANCE);
+                            if (!shutDown.compareAndSet(false, true)) {
+
+                                shutdownCallback.get().onSuccess(Success.INSTANCE);
+                            }
                         }
 
                         @Override
