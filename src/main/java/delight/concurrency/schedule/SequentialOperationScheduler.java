@@ -165,9 +165,10 @@ public class SequentialOperationScheduler {
                 @Override
                 public void onSuccess(final Object value) {
 
-                    entryClosed.callback.onSuccess(value);
                     operationInProgress.set(false);
                     executorForIndirectCalls.execute(runIfRequiredRunnable);
+
+                    entryClosed.callback.onSuccess(value);
 
                 }
             });
