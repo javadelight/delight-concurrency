@@ -15,7 +15,7 @@ import java.util.LinkedList;
 
 public class SequentialOperationScheduler {
 
-    private static final boolean ENABLE_LOG = true;
+    private static final boolean ENABLE_LOG = false;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
