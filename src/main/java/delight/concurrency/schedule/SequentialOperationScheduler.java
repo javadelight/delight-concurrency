@@ -33,11 +33,11 @@ public class SequentialOperationScheduler {
     }
 
     /**
-     * If its NOT running and CAN be suspended, return true.
+     * If its NOT running and CAN be suspended, suspend and return true.
      * 
      * @return
      */
-    public boolean suspendIfNotRunning() {
+    public boolean suspendIfPossible() {
 
         if (!running.get()) {
             suspend();
