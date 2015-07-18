@@ -215,7 +215,7 @@ public class SequentialOperationScheduler {
 
                         @Override
                         public void thenDo() {
-                            if (!shutDown.compareAndSet(false, true)) {
+                            if (shutDown.compareAndSet(false, true)) {
 
                                 shutdownCallback.get().onSuccess(Success.INSTANCE);
                             }
@@ -242,6 +242,7 @@ public class SequentialOperationScheduler {
         this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
+        this.shutDown = concurrency.newAtomicBoolean(false);
 
     }
 
