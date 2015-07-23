@@ -43,7 +43,7 @@ public class Concurrent {
             });
         }
 
-        AsyncCommon.sequential(operations, AsyncCommon.embed(callback, new Closure<List<R>>() {
+        AsyncCommon.sequential(modifiedOperations, AsyncCommon.embed(callback, new Closure<List<R>>() {
 
             @Override
             public void apply(final List<R> o) {
