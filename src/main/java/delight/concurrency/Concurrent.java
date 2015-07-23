@@ -46,12 +46,12 @@ public class Concurrent {
         AsyncCommon.sequential(modifiedOperations, AsyncCommon.embed(callback, new Closure<List<R>>() {
 
             @Override
-            public void apply(final List<R> o) {
+            public void apply(final List<R> results) {
                 executor.shutdown(new WhenExecutorShutDown() {
 
                     @Override
                     public void thenDo() {
-                        callback.onSuccess(o);
+                        callback.onSuccess(results);
                     }
 
                     @Override
