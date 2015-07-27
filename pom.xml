@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!-- Template: Source + GWT + in workspace dependencies 27.11.2010 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!-- Template: Source 
+	+ GWT + in workspace dependencies 27.11.2010 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<groupId>org.javadelight</groupId>
 	<artifactId>delight-concurrency</artifactId>
 	<version>0.0.5</version>
@@ -7,7 +8,7 @@
 	<url>https://github.com/mxro/concurrency-api</url>
 	<properties>
 
-		<module.gwtVersion>2.5.1</module.gwtVersion>
+		<module.gwtVersion>2.7.0</module.gwtVersion>
 		<module.draftCompile>true</module.draftCompile>
 		<module.importedPackages>
 			org.junit,
@@ -21,11 +22,11 @@
 
 	<!-- Dependent Modules -->
 	<dependencies>
-<dependency>
-<groupId>org.javadelight</groupId>
-	<artifactId>delight-async</artifactId>
-	<version>0.0.9</version>
-</dependency>
+		<dependency>
+			<groupId>org.javadelight</groupId>
+			<artifactId>delight-async</artifactId>
+			<version>0.0.9</version>
+		</dependency>
 		<dependency>
 			<groupId>org.javadelight</groupId>
 			<artifactId>delight-factories</artifactId>
@@ -75,7 +76,7 @@
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
-				<version>2.5.0</version>
+				<version>2.5.3</version>
 				<configuration>
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
@@ -102,7 +103,7 @@
 				<configuration>
 
 					<draftCompile>${module.draftCompile}</draftCompile>
-					<logLevel>INFO</logLevel>
+					<logLevel>DEBUG</logLevel>
 					<!-- -->
 					<validateOnly>true</validateOnly>
 					<gwtVersion>${module.gwtVersion}</gwtVersion>
@@ -320,40 +321,19 @@
 
 		</resources>
 
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>2.5</version>
-			</extension>
-
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>2.5</version>
-			</extension>
-		</extensions>
+		
 	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>appjangle-releases</id>
-			<url>${repos.appjangle-releases}</url>
-		</repository>
-		<snapshotRepository>
-			<id>appjangle-snapshots</id>
-			<url>${repos.appjangle-snapshots}</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	
+
+
 	<repositories>
 		<repository>
 			<id>Appjangle Releases</id>
 			<url>http://maven.appjangle.com/appjangle/releases</url>
 		</repository>
 	</repositories>
-	
+
 	<developers>
 		<developer>
 			<id>mxro</id>
@@ -370,11 +350,6 @@
 		</developer>
 	</developers>
 
-	<scm>
-		<connection>scm:git:git@github.com:mxro/concurrency-api.git</connection>
-		<url>https://github.com/mxro/concurrency-api</url>
-		<developerConnection>scm:git:git@github.com:mxro/concurrency-api.git
-		</developerConnection>
-	</scm>
+	
 
 </project>
