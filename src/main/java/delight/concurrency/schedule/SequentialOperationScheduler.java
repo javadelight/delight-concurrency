@@ -145,7 +145,7 @@ public class SequentialOperationScheduler {
             }
             synchronized (scheduled) {
 
-                entry = scheduled.pollFirst();
+                entry = scheduled.poll();
             }
         }
 
