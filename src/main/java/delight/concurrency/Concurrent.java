@@ -1,11 +1,8 @@
 package delight.concurrency;
 
-import delight.async.AsyncCommon;
 import delight.async.Operation;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
-import delight.functional.Closure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,40 +24,31 @@ public class Concurrent {
 
         final SimpleExecutor executor = concurrency.newExecutor().newSingleThreadExecutor(callback);
 
-        for (final Operation<R> op : operations) {
-            modifiedOperations.add(new Operation<R>() {
+        sequentialInt(modifiedOperations, 0, new ArrayList<R>(operations.size()), callback);
 
-                @Override
-                public void apply(final ValueCallback<R> callback) {
-                    executor.execute(new Runnable() {
+    }
 
-                        @Override
-                        public void run() {
-                            op.apply(callback);
-                        }
-                    });
-                }
-            });
+    private static <R> void sequentialInt(final List<Operation<R>> operations, final int idx, final List<R> results,
+            final ValueCallback<List<R>> callback) {
+
+        if (idx >= operations.size()) {
+            callback.onSuccess(results);
+            return;
         }
 
-        AsyncCommon.sequential(modifiedOperations, AsyncCommon.embed(callback, new Closure<List<R>>() {
+        operations.get(idx).apply(new ValueCallback<R>() {
 
             @Override
-            public void apply(final List<R> results) {
-                executor.shutdown(new WhenExecutorShutDown() {
-
-                    @Override
-                    public void thenDo() {
-                        callback.onSuccess(results);
-                    }
-
-                    @Override
-                    public void onFailure(final Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
+            public void onFailure(final Throwable t) {
+                callback.onFailure(t);
             }
-        }));
+
+            @Override
+            public void onSuccess(final R value) {
+                results.add(value);
+                sequentialInt(operations, idx + 1, results, callback);
+            }
+        });
 
     }
 
