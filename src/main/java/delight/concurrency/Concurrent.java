@@ -1,6 +1,7 @@
 package delight.concurrency;
 
 import delight.async.Operation;
+import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
 
@@ -36,6 +37,8 @@ public class Concurrent {
             return;
         }
 
+        final Value<SimpleExecutor> executor = new Value<SimpleExecutor>(null);
+
         operations.get(idx).apply(new ValueCallback<R>() {
 
             @Override
@@ -46,7 +49,12 @@ public class Concurrent {
             @Override
             public void onSuccess(final R value) {
                 results.add(value);
-                sequentialInt(operations, idx + 1, results, callback);
+
+                if (idx == 0 || idx % 5 != 0) {
+                    sequentialInt(operations, idx + 1, results, callback);
+                    return;
+                }
+
             }
         });
 
