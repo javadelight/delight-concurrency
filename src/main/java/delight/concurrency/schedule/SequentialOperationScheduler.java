@@ -170,12 +170,14 @@ public class SequentialOperationScheduler {
                 @Override
                 public void onSuccess(final Object value) {
 
+                    operationInProgress.set(false);
+                    executorForIndirectCalls.execute(runIfRequiredRunnable);
+                    entryClosed.callback.onSuccess(value);
+
                     final OperationEntry<Object> operationEntry = scheduled.poll();
 
                     if (operationEntry == null) {
-                        operationInProgress.set(false);
-                        executorForIndirectCalls.execute(runIfRequiredRunnable);
-                        entryClosed.callback.onSuccess(value);
+
                         return;
                     }
 
