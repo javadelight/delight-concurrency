@@ -15,10 +15,11 @@ import java.util.LinkedList;
 
 public class SequentialOperationScheduler {
 
-    private static final boolean ENABLE_LOG = false;
+    private static final boolean ENABLE_LOG = true;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForIndirectCalls;
+
     private final SimpleAtomicBoolean running;
     private final SimpleAtomicBoolean shuttingDown;
     private final SimpleAtomicBoolean shutDown;
