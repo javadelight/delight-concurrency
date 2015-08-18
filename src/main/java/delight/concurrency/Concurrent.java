@@ -4,6 +4,7 @@ import delight.async.Operation;
 import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
+import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,9 @@ public class Concurrent {
     public static <R> void sequential(final List<Operation<R>> operations, final Concurrency concurrency,
             final ValueCallback<List<R>> callback) {
 
-        final List<Operation<R>> modifiedOperations = new ArrayList<Operation<R>>(operations.size());
-
         final Value<SimpleExecutor> executor = new Value<SimpleExecutor>(null);
 
-        sequentialInt(modifiedOperations, 0, new ArrayList<R>(operations.size()), concurrency, executor, callback);
+        sequentialInt(operations, 0, new ArrayList<R>(operations.size()), concurrency, executor, callback);
 
     }
 
@@ -34,9 +33,25 @@ public class Concurrent {
             final ValueCallback<List<R>> callback) {
 
         if (idx >= operations.size()) {
-            if (e) {
+            final SimpleExecutor exc = executor.get();
+            if (exc == null) {
                 callback.onSuccess(results);
+                return;
             }
+
+            exc.shutdown(new WhenExecutorShutDown() {
+
+                @Override
+                public void thenDo() {
+                    callback.onSuccess(results);
+                }
+
+                @Override
+                public void onFailure(final Throwable t) {
+                    callback.onFailure(t);
+                }
+            });
+
             return;
         }
 
