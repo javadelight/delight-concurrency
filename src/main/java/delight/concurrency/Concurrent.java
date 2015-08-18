@@ -23,19 +23,22 @@ public class Concurrent {
 
         final List<Operation<R>> modifiedOperations = new ArrayList<Operation<R>>(operations.size());
 
-        sequentialInt(modifiedOperations, 0, new ArrayList<R>(operations.size()), concurrency, callback);
+        final Value<SimpleExecutor> executor = new Value<SimpleExecutor>(null);
+
+        sequentialInt(modifiedOperations, 0, new ArrayList<R>(operations.size()), concurrency, executor, callback);
 
     }
 
     private static <R> void sequentialInt(final List<Operation<R>> operations, final int idx, final List<R> results,
-            final Concurrency concurrency, final ValueCallback<List<R>> callback) {
+            final Concurrency concurrency, final Value<SimpleExecutor> executor,
+            final ValueCallback<List<R>> callback) {
 
         if (idx >= operations.size()) {
-            callback.onSuccess(results);
+            if (e) {
+                callback.onSuccess(results);
+            }
             return;
         }
-
-        final Value<SimpleExecutor> executor = new Value<SimpleExecutor>(null);
 
         operations.get(idx).apply(new ValueCallback<R>() {
 
@@ -49,7 +52,7 @@ public class Concurrent {
                 results.add(value);
 
                 if (idx == 0 || idx % 5 != 0) {
-                    sequentialInt(operations, idx + 1, results, concurrency, callback);
+                    sequentialInt(operations, idx + 1, results, concurrency, executor, callback);
                     return;
                 }
                 SimpleExecutor exc = executor.get();
@@ -63,7 +66,7 @@ public class Concurrent {
 
                     @Override
                     public void run() {
-                        sequentialInt(operations, idx + 1, results, concurrency, callback);
+                        sequentialInt(operations, idx + 1, results, concurrency, executor, callback);
                     }
                 });
 
