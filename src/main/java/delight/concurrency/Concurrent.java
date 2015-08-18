@@ -52,11 +52,20 @@ public class Concurrent {
                     sequentialInt(operations, idx + 1, results, concurrency, callback);
                     return;
                 }
-                final SimpleExecutor exc = executor.get();
+                SimpleExecutor exc = executor.get();
 
                 if (exc == null) {
-                    exec = concurrency.newExecutor().newSingleThreadExecutor(callback);
+                    exc = concurrency.newExecutor().newSingleThreadExecutor(callback);
+                    executor.set(exc);
                 }
+
+                exc.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        sequentialInt(operations, idx + 1, results, concurrency, callback);
+                    }
+                });
 
             }
         });
