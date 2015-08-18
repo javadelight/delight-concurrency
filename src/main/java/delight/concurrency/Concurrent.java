@@ -35,7 +35,7 @@ public class Concurrent {
         if (idx >= operations.size()) {
             final SimpleExecutor exc = executor.get();
             if (exc == null) {
-                System.out.println("No executor required.");
+                // System.out.println("No executor required.");
                 callback.onSuccess(results);
                 return;
             }
@@ -67,14 +67,14 @@ public class Concurrent {
             public void onSuccess(final R value) {
                 results.add(value);
 
-                if (idx == 0 || idx % 5 != 0) {
+                if (idx == 0 || idx % 8 != 0) {
                     sequentialInt(operations, idx + 1, results, concurrency, executor, callback);
                     return;
                 }
                 SimpleExecutor exc = executor.get();
 
                 if (exc == null) {
-                    System.out.println("Create dedicated executor.");
+                    // System.out.println("Create dedicated executor.");
                     exc = concurrency.newExecutor().newSingleThreadExecutor(callback);
                     executor.set(exc);
                 }
