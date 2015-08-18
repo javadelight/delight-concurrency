@@ -171,9 +171,9 @@ public class SequentialOperationScheduler {
                 public void onSuccess(final Object value) {
 
                     operationInProgress.set(false);
-                    executorForIndirectCalls.execute(runIfRequiredRunnable);
 
                     entryClosed.callback.onSuccess(value);
+                    executorForIndirectCalls.execute(runIfRequiredRunnable);
 
                 }
             });
