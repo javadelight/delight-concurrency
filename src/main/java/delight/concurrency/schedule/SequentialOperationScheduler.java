@@ -174,17 +174,6 @@ public class SequentialOperationScheduler {
                     executorForIndirectCalls.execute(runIfRequiredRunnable);
                     entryClosed.callback.onSuccess(value);
 
-                    final OperationEntry<Object> operationEntry = scheduled.poll();
-
-                    if (operationEntry == null) {
-
-                        return;
-                    }
-
-                    operationEntry.operation.apply(operationEntry.callback);
-
-                    entryClosed.callback.onSuccess(value);
-
                 }
             });
         }
