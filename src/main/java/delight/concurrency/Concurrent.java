@@ -35,6 +35,7 @@ public class Concurrent {
         if (idx >= operations.size()) {
             final SimpleExecutor exc = executor.get();
             if (exc == null) {
+                System.out.println("No executor required.");
                 callback.onSuccess(results);
                 return;
             }
@@ -73,6 +74,7 @@ public class Concurrent {
                 SimpleExecutor exc = executor.get();
 
                 if (exc == null) {
+                    System.out.println("Create dedicated executor.");
                     exc = concurrency.newExecutor().newSingleThreadExecutor(callback);
                     executor.set(exc);
                 }
