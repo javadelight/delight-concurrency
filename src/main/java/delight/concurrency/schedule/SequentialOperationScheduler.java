@@ -237,6 +237,7 @@ public class SequentialOperationScheduler {
 
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
+        assert concurrency != null;
         this.scheduled = new LinkedList<OperationEntry<Object>>();
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
