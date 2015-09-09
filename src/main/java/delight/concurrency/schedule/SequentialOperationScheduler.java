@@ -18,7 +18,7 @@ public class SequentialOperationScheduler {
     private static final boolean ENABLE_LOG = false;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
-    private final SimpleExecutor executorForIndirectCalls;
+    private final SimpleExecutor executor;
 
     private final SimpleAtomicBoolean running;
     private final SimpleAtomicBoolean shuttingDown;
@@ -162,7 +162,7 @@ public class SequentialOperationScheduler {
                 @Override
                 public void onFailure(final Throwable t) {
                     operationInProgress.set(false);
-                    executorForIndirectCalls.execute(runIfRequiredRunnable);
+                    executor.execute(runIfRequiredRunnable);
 
                     entryClosed.callback.onFailure(t);
 
@@ -172,7 +172,7 @@ public class SequentialOperationScheduler {
                 public void onSuccess(final Object value) {
 
                     operationInProgress.set(false);
-                    executorForIndirectCalls.execute(runIfRequiredRunnable);
+                    executor.execute(runIfRequiredRunnable);
                     entryClosed.callback.onSuccess(value);
 
                 }
@@ -213,7 +213,7 @@ public class SequentialOperationScheduler {
                     System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
                 }
                 if (scheduled.isEmpty()) {
-                    this.executorForIndirectCalls.shutdown(new WhenExecutorShutDown() {
+                    this.executor.shutdown(new WhenExecutorShutDown() {
 
                         @Override
                         public void thenDo() {
@@ -242,7 +242,7 @@ public class SequentialOperationScheduler {
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
-        this.executorForIndirectCalls = concurrency.newExecutor().newSingleThreadExecutor(this);
+        this.executor = concurrency.newExecutor().newSingleThreadExecutor(this);
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
         this.shutDown = concurrency.newAtomicBoolean(false);
