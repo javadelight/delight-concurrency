@@ -174,7 +174,8 @@ public class SequentialOperationScheduler {
                 public void onFailure(final Throwable t) {
                     if (operationCompleted.get()) {
                         throw new RuntimeException(
-                                "Operation failed. Callback cannot be triggered, it was already triggered by a timeout",
+                                "Operation [" + entryClosed.operation
+                                        + "] failed. Callback cannot be triggered, it was already triggered by a timeout",
                                 t);
                     }
                     operationCompleted.set(true);
@@ -187,6 +188,10 @@ public class SequentialOperationScheduler {
 
                 @Override
                 public void onSuccess(final Object value) {
+                    if (operationCompleted.get()) {
+                        throw new RuntimeException("Operation [" + entryClosed.operation
+                                + "] successful. Callback cannot be triggered, it was already triggered by a timeout");
+                    }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
                     executor.execute(runIfRequiredRunnable);
