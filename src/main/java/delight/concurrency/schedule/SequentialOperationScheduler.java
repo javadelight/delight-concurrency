@@ -20,6 +20,8 @@ public class SequentialOperationScheduler {
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executor;
 
+    private final Concurrency concurrency;
+
     private final SimpleAtomicBoolean running;
     private final SimpleAtomicBoolean shuttingDown;
     private final SimpleAtomicBoolean shutDown;
@@ -162,6 +164,8 @@ public class SequentialOperationScheduler {
                 System.out.println(this + ": Execute operation " + entry.operation);
             }
 
+            final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false)
+            
             lastOperationStartTimestamp = System.currentTimeMillis();
 
             entry.operation.apply(new ValueCallback<Object>() {
@@ -249,6 +253,7 @@ public class SequentialOperationScheduler {
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
         assert concurrency != null;
+        this.concurrency = concurrency;
         this.scheduled = new LinkedList<OperationEntry<Object>>();
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
