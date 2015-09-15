@@ -103,6 +103,8 @@ public class SequentialOperationScheduler {
 
     };
 
+    private final SimpleExecutor executorForTimeouts;
+
     private final void runIfRequired() {
 
         if (operationInProgress.get()) {
@@ -258,6 +260,9 @@ public class SequentialOperationScheduler {
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executor = concurrency.newExecutor().newSingleThreadExecutor(this);
+
+        this.executorForTimeouts = concurrency.newExecutor().newSingleThreadExecutor(this);
+
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
         this.shutDown = concurrency.newAtomicBoolean(false);
