@@ -161,9 +161,9 @@ public class SequentialOperationScheduler {
             if (ENABLE_LOG) {
                 System.out.println(this + ": Execute operation " + entry.operation);
             }
-            
-            System.currentTimeMillis()
-            
+
+            lastOperationTimestamp = System.currentTimeMillis();
+
             entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
