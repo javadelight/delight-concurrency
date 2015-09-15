@@ -207,7 +207,11 @@ public class SequentialOperationScheduler {
                     while (operationCompleted.get() == false) {
                         if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
 
-                            operationCompleted.set(ture);
+                            operationCompleted.set(true);
+                            operationInProgress.set(false);
+                            executor.execute(runIfRequiredRunnable);
+                            entryClosed.callback
+                                    .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
 
                             return;
                         }
