@@ -32,8 +32,6 @@ public class SequentialOperationScheduler {
 
     private int timeout;
 
-    private long lastOperationStartTimestamp;
-
     public boolean isRunning() {
         synchronized (running) {
             return running.get();
@@ -164,14 +162,15 @@ public class SequentialOperationScheduler {
                 System.out.println(this + ": Execute operation " + entry.operation);
             }
 
-            final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false)
-            
-            lastOperationStartTimestamp = System.currentTimeMillis();
+            final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
+
+            final long lastOperationStartTimestamp = System.currentTimeMillis();
 
             entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
                 public void onFailure(final Throwable t) {
+                    operationCompleted.set(true);
                     operationInProgress.set(false);
                     executor.execute(runIfRequiredRunnable);
 
@@ -181,7 +180,7 @@ public class SequentialOperationScheduler {
 
                 @Override
                 public void onSuccess(final Object value) {
-
+                    operationCompleted.set(true);
                     operationInProgress.set(false);
                     executor.execute(runIfRequiredRunnable);
                     entryClosed.callback.onSuccess(value);
