@@ -28,6 +28,8 @@ public class SequentialOperationScheduler {
 
     private final Value<ValueCallback<Success>> shutdownCallback;
 
+    private int timeout;
+
     public boolean isRunning() {
         synchronized (running) {
             return running.get();
@@ -235,6 +237,10 @@ public class SequentialOperationScheduler {
 
     }
 
+    public void setTimeout(final int timeoutInMs) {
+        this.timeout = timeoutInMs;
+    }
+
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
         assert concurrency != null;
@@ -246,6 +252,7 @@ public class SequentialOperationScheduler {
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
         this.shutDown = concurrency.newAtomicBoolean(false);
+        this.timeout = 3000;
 
     }
 
