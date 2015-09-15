@@ -172,6 +172,11 @@ public class SequentialOperationScheduler {
 
                 @Override
                 public void onFailure(final Throwable t) {
+                    if (operationCompleted.get()) {
+                        throw new RuntimeException(
+                                "Operation failed. Callback cannot be triggered, it was already triggered by a timeout",
+                                t);
+                    }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
                     executor.execute(runIfRequiredRunnable);
@@ -197,6 +202,9 @@ public class SequentialOperationScheduler {
                     while (operationCompleted.get() == false) {
                         if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
 
+                            operationCompleted.set(ture);
+
+                            return;
                         }
 
                         try {
