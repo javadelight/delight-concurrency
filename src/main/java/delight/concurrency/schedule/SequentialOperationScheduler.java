@@ -30,7 +30,7 @@ public class SequentialOperationScheduler {
 
     private int timeout;
 
-    private long lastOperationTimestamp;
+    private long lastOperationStartTimestamp;
 
     public boolean isRunning() {
         synchronized (running) {
@@ -162,7 +162,7 @@ public class SequentialOperationScheduler {
                 System.out.println(this + ": Execute operation " + entry.operation);
             }
 
-            lastOperationTimestamp = System.currentTimeMillis();
+            lastOperationStartTimestamp = System.currentTimeMillis();
 
             entry.operation.apply(new ValueCallback<Object>() {
 
