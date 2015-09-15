@@ -30,6 +30,8 @@ public class SequentialOperationScheduler {
 
     private int timeout;
 
+    private long lastOperationTimestamp;
+
     public boolean isRunning() {
         synchronized (running) {
             return running.get();
@@ -159,6 +161,9 @@ public class SequentialOperationScheduler {
             if (ENABLE_LOG) {
                 System.out.println(this + ": Execute operation " + entry.operation);
             }
+            
+            System.currentTimeMillis()
+            
             entry.operation.apply(new ValueCallback<Object>() {
 
                 @Override
