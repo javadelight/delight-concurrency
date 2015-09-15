@@ -189,6 +189,24 @@ public class SequentialOperationScheduler {
 
                 }
             });
+
+            this.executorForTimeouts.execute(new Runnable() {
+
+                @Override
+                public void run() {
+                    while (operationCompleted.get() == false) {
+                        if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
+
+                        }
+
+                        try {
+                            Thread.sleep(40);
+                        } catch (final InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            });
         }
 
     }
