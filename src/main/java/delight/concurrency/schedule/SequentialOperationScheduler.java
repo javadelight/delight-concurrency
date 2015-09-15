@@ -164,7 +164,7 @@ public class SequentialOperationScheduler {
 
             final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
 
-            final long lastOperationStartTimestamp = System.currentTimeMillis();
+            final long operationStartTimestamp = System.currentTimeMillis();
 
             entry.operation.apply(new ValueCallback<Object>() {
 
