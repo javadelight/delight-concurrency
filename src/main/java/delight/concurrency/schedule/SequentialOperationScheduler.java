@@ -18,7 +18,7 @@ public class SequentialOperationScheduler {
     private static final boolean ENABLE_LOG = false;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
-    private final SimpleExecutor executor;
+    private final SimpleExecutor executorForPreventingDeepStacks;
 
     private final Concurrency concurrency;
 
@@ -180,7 +180,7 @@ public class SequentialOperationScheduler {
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
-                    executor.execute(runIfRequiredRunnable);
+                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
 
                     entryClosed.callback.onFailure(t);
 
@@ -194,7 +194,7 @@ public class SequentialOperationScheduler {
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
-                    executor.execute(runIfRequiredRunnable);
+                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
                     entryClosed.callback.onSuccess(value);
 
                 }
@@ -209,7 +209,7 @@ public class SequentialOperationScheduler {
 
                             operationCompleted.set(true);
                             operationInProgress.set(false);
-                            executor.execute(runIfRequiredRunnable);
+                            executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
                             entryClosed.callback
                                     .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
 
@@ -260,7 +260,7 @@ public class SequentialOperationScheduler {
                     System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
                 }
                 if (scheduled.isEmpty()) {
-                    this.executor.shutdown(new WhenExecutorShutDown() {
+                    this.executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
 
                         @Override
                         public void thenDo() {
@@ -294,7 +294,7 @@ public class SequentialOperationScheduler {
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
-        this.executor = concurrency.newExecutor().newSingleThreadExecutor(this);
+        this.executorForPreventingDeepStacks = concurrency.newExecutor().newSingleThreadExecutor(this);
 
         this.executorForTimeouts = concurrency.newExecutor().newSingleThreadExecutor(this);
 
