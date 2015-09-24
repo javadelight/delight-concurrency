@@ -216,6 +216,10 @@ public final class SequentialOperationScheduler {
                 }
             });
 
+            if (operationCompleted.get() || shutDown.get()) {
+                return;
+            }
+
             this.executorForTimeouts.execute(new Runnable() {
 
                 @Override
