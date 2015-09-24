@@ -260,26 +260,30 @@ public class SequentialOperationScheduler {
                     System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
                 }
                 if (scheduled.isEmpty()) {
-                    this.executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
-
-                        @Override
-                        public void thenDo() {
-                            if (shutDown.compareAndSet(false, true)) {
-
-                                shutdownCallback.get().onSuccess(Success.INSTANCE);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(final Throwable t) {
-                            shutdownCallback.get().onFailure(t);
-                        }
-                    });
+                    performShutdown();
                     return;
                 }
             }
         }
 
+    }
+
+    private final void performShutdown() {
+        this.executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
+
+            @Override
+            public void thenDo() {
+                if (shutDown.compareAndSet(false, true)) {
+
+                    shutdownCallback.get().onSuccess(Success.INSTANCE);
+                }
+            }
+
+            @Override
+            public void onFailure(final Throwable t) {
+                shutdownCallback.get().onFailure(t);
+            }
+        });
     }
 
     public void setTimeout(final int timeoutInMs) {
