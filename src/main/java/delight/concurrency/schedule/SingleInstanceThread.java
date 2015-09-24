@@ -6,7 +6,7 @@ package delight.concurrency.schedule;
 import delight.concurrency.Concurrency;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.concurrency.wrappers.WhenExecutorShutDown;
 
 /**
  * A thread of which only one instance runs at any one time.<br/>

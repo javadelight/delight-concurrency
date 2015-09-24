@@ -4,7 +4,7 @@ import delight.async.Operation;
 import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.concurrency.wrappers.WhenExecutorShutDown;
 
 import java.util.ArrayList;
 import java.util.List;

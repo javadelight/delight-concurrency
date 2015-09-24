@@ -6,8 +6,8 @@ import delight.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallb
 import delight.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
 import delight.concurrency.wrappers.SimpleLock;
+import delight.concurrency.wrappers.WhenExecutorShutDown;
 
 import java.util.ArrayList;
 import java.util.List;

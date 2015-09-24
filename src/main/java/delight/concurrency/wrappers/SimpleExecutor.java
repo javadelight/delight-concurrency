@@ -13,18 +13,6 @@ public interface SimpleExecutor {
      */
     public Object execute(Runnable runnable);
 
-    public interface WhenExecutorShutDown extends SimpleCallback {
-
-        /**
-         * Called when no threads spawned by this executor run anymore.
-         */
-        @Override
-        public void onSuccess();
-
-        @Override
-        public void onFailure(Throwable t);
-    }
-
     /**
      * Returns the current thread of the caller.
      * 

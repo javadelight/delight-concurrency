@@ -9,7 +9,7 @@ import delight.concurrency.internal.schedule.OperationEntry;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.concurrency.wrappers.WhenExecutorShutDown;
 import delight.functional.Closure;
 import delight.functional.Success;
 
