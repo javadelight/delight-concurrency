@@ -1,5 +1,6 @@
 package delight.concurrency.jre;
 
+import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
 
 import java.util.concurrent.CountDownLatch;
@@ -7,74 +8,73 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
-	private final ExecutorService executor;
+    private final ExecutorService executor;
 
-	Thread lastThread;
+    Thread lastThread;
 
-	@Override
-	public Object execute(final Runnable runnable) {
-		final CountDownLatch latch = new CountDownLatch(2);
+    @Override
+    public Object execute(final Runnable runnable) {
+        final CountDownLatch latch = new CountDownLatch(2);
 
-		assert !executor.isShutdown() && !executor.isTerminated() : "Cannot execute task as executor is shut down. "
-				+ executor.toString() + " " + runnable;
+        assert!executor.isShutdown() && !executor.isTerminated() : "Cannot execute task as executor is shut down. "
+                + executor.toString() + " " + runnable;
 
-		executor.execute(new Runnable() {
+        executor.execute(new Runnable() {
 
-			@Override
-			public void run() {
-				lastThread = Thread.currentThread();
-				latch.countDown();
-				runnable.run();
-			}
-		});
+            @Override
+            public void run() {
+                lastThread = Thread.currentThread();
+                latch.countDown();
+                runnable.run();
+            }
+        });
 
-		latch.countDown();
+        latch.countDown();
 
-		if (lastThread == null) {
-			try {
-				latch.await(5000, TimeUnit.MILLISECONDS);
-			} catch (final InterruptedException e) {
-				throw new RuntimeException(
-						"Cannot determine handle of thread to be executed.");
-			}
-		}
+        if (lastThread == null) {
+            try {
+                latch.await(5000, TimeUnit.MILLISECONDS);
+            } catch (final InterruptedException e) {
+                throw new RuntimeException("Cannot determine handle of thread to be executed.");
+            }
+        }
 
-		return lastThread;
-	}
+        return lastThread;
+    }
 
-	@Override
-	public void shutdown(final WhenExecutorShutDown callback) {
+    @Override
+    public void shutdown(final SimpleCallback callback) {
 
-		executor.shutdown();
+        executor.shutdown();
 
-		Thread t = new Thread() {
+        Thread t = new Thread() {
 
-			@Override
-			public void run() {
-				try {
-					executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
-					callback.onSuccess();
-				} catch (final Throwable t) {
-					callback.onFailure(t);
-				}
+            @Override
+            public void run() {
+                try {
+                    executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
+                    callback.onSuccess();
+                } catch (final Throwable t) {
+                    callback.onFailure(t);
+                }
 
-			}
+            }
 
-		};
-		t.start();
-		t = null;
+        };
+        t.start();
+        t = null;
 
-	}
+    }
 
-	public JavaExecutor(final ExecutorService executor) {
-		super();
-		this.executor = executor;
-	}
+    public JavaExecutor(final ExecutorService executor) {
+        super();
+        this.executor = executor;
+    }
 
-	@Override
-	public Object getCurrentThread() {
+    @Override
+    public Object getCurrentThread() {
 
-		return Thread.currentThread();
-	}
+        return Thread.currentThread();
+    }
 
 }

@@ -32,6 +32,6 @@ public interface SimpleExecutor {
      */
     public Object getCurrentThread();
 
-    public void shutdown(WhenExecutorShutDown callback);
+    public void shutdown(SimpleCallback callback);
 
 }

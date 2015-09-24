@@ -1,5 +1,6 @@
 package delight.concurrency.jre;
 
+import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.factories.CollectionFactory;
 import delight.concurrency.factories.ExecutorFactory;
@@ -74,7 +75,7 @@ public class JreConcurrency implements Concurrency {
                     }
 
                     @Override
-                    public void shutdown(final WhenExecutorShutDown callback) {
+                    public void shutdown(final SimpleCallback callback) {
                         callback.onSuccess();
                     }
 
@@ -97,8 +98,8 @@ public class JreConcurrency implements Concurrency {
             @Override
             public SimpleTimer scheduleOnce(final int when, final Runnable runnable) {
 
-                final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
-                        + runnable.getClass());
+                final java.util.Timer javaTimer = new java.util.Timer(
+                        "JreConcurrency-SimpleTimer-for-" + runnable.getClass());
 
                 final TimerTask timerTask = new TimerTask() {
 
@@ -124,9 +125,10 @@ public class JreConcurrency implements Concurrency {
             }
 
             @Override
-            public SimpleTimer scheduleRepeating(final int offsetInMs, final int intervallInMs, final Runnable runnable) {
-                final java.util.Timer javaTimer = new java.util.Timer("JreConcurrency-SimpleTimer-for-"
-                        + runnable.getClass());
+            public SimpleTimer scheduleRepeating(final int offsetInMs, final int intervallInMs,
+                    final Runnable runnable) {
+                final java.util.Timer javaTimer = new java.util.Timer(
+                        "JreConcurrency-SimpleTimer-for-" + runnable.getClass());
                 final TimerTask timerTask = new TimerTask() {
 
                     @Override
