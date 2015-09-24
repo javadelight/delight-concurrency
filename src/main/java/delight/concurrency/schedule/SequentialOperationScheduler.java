@@ -295,6 +295,27 @@ public class SequentialOperationScheduler {
             }
         });
 
+        ops.add(new Operation<Success>() {
+
+            @Override
+            public void apply(final ValueCallback<Success> callback) {
+                executorForTimeouts.shutdown(new WhenExecutorShutDown() {
+
+                    @Override
+                    public void onSuccess() {
+
+                        callback.onSuccess(Success.INSTANCE);
+                    }
+
+                    @Override
+                    public void onFailure(final Throwable t) {
+                        callback.onFailure(t);
+                    }
+                });
+            }
+
+        });
+
         AsyncCommon.sequential(ops, AsyncCommon.embed(shutdownCallback.get(), new Closure<List<Success>>() {
 
             @Override
