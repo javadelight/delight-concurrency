@@ -221,7 +221,7 @@ public class SequentialOperationScheduler {
                         }
 
                         try {
-                            Thread.sleep(40);
+                            Thread.sleep(10);
                         } catch (final InterruptedException e) {
                             throw new RuntimeException(e);
                         }
@@ -303,7 +303,6 @@ public class SequentialOperationScheduler {
 
                     @Override
                     public void onSuccess() {
-
                         callback.onSuccess(Success.INSTANCE);
                     }
 
