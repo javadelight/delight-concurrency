@@ -6,8 +6,8 @@ import delight.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallb
 import delight.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleLock;
 import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.concurrency.wrappers.SimpleLock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +143,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
         this.finalizedListener.add(new WhenProcessed() {
 
             @Override
-            public void onSuccess() {
+            public void thenDo() {
                 whenProcessed.thenDo();
             }
         });
@@ -281,8 +281,8 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
         this.lock = concurrency.newLock();
 
-        this.finalizedListener = concurrency.newCollection().newThreadSafeList(
-                SingleInstanceQueueWorker.WhenProcessed.class);
+        this.finalizedListener = concurrency.newCollection()
+                .newThreadSafeList(SingleInstanceQueueWorker.WhenProcessed.class);
 
         // this.maxCalltime = -1;
 
