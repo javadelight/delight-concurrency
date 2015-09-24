@@ -33,6 +33,8 @@ public class SequentialOperationScheduler {
     private final SimpleAtomicInteger suspendCount;
     private final SimpleAtomicBoolean operationInProgress;
 
+    private boolean enforceOwnThread;
+
     private final Value<ValueCallback<Success>> shutdownCallback;
 
     private int timeout;
@@ -96,7 +98,18 @@ public class SequentialOperationScheduler {
                 }
             }));
         }
-        runIfRequired();
+
+        if (operationInProgress.get()) {
+            return;
+        }
+
+        if (!enforceOwnThread) {
+
+            runIfRequired();
+            return;
+        }
+
+        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
     }
 
     private final Runnable runIfRequiredRunnable = new Runnable() {
