@@ -1,5 +1,6 @@
 package delight.concurrency.schedule;
 
+import delight.async.AsyncCommon;
 import delight.async.Operation;
 import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
@@ -9,9 +10,12 @@ import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleExecutor.WhenExecutorShutDown;
+import delight.functional.Closure;
 import delight.functional.Success;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class SequentialOperationScheduler {
 
@@ -269,21 +273,39 @@ public class SequentialOperationScheduler {
     }
 
     private final void performShutdown() {
-        this.executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
+
+        final List<Operation<Success>> ops = new ArrayList<Operation<Success>>(4);
+
+        ops.add(new Operation<Success>() {
 
             @Override
-            public void onSuccess() {
+            public void apply(final ValueCallback<Success> callback) {
+                executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
+
+                    @Override
+                    public void onSuccess() {
+                        callback.onSuccess(Success.INSTANCE);
+                    }
+
+                    @Override
+                    public void onFailure(final Throwable t) {
+                        callback.onFailure(t);
+                    }
+                });
+            }
+        });
+
+        AsyncCommon.sequential(ops, AsyncCommon.embed(shutdownCallback.get(), new Closure<List<Success>>() {
+
+            @Override
+            public void apply(final List<Success> o) {
                 if (shutDown.compareAndSet(false, true)) {
 
                     shutdownCallback.get().onSuccess(Success.INSTANCE);
                 }
             }
+        }));
 
-            @Override
-            public void onFailure(final Throwable t) {
-                shutdownCallback.get().onFailure(t);
-            }
-        });
     }
 
     public void setTimeout(final int timeoutInMs) {
