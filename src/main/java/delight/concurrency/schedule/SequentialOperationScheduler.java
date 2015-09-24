@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SequentialOperationScheduler {
+public final class SequentialOperationScheduler {
 
     private static final boolean ENABLE_LOG = false;
 
