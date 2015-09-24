@@ -23,6 +23,7 @@ public class SequentialOperationScheduler {
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForPreventingDeepStacks;
+    private final SimpleExecutor executorForTimeouts;
 
     private final Concurrency concurrency;
 
@@ -106,8 +107,6 @@ public class SequentialOperationScheduler {
         }
 
     };
-
-    private final SimpleExecutor executorForTimeouts;
 
     private final void runIfRequired() {
 
