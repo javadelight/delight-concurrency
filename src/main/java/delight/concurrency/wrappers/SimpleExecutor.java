@@ -16,7 +16,7 @@ public interface SimpleExecutor {
 		/**
 		 * Called when no threads spawned by this executor run anymore.
 		 */
-		public void thenDo();
+		public void onSuccess();
 
 		public void onFailure(Throwable t);
 	}

@@ -53,7 +53,7 @@ public class JavaExecutor implements SimpleExecutor {
 			public void run() {
 				try {
 					executor.awaitTermination(10000, TimeUnit.MILLISECONDS);
-					callback.thenDo();
+					callback.onSuccess();
 				} catch (final Throwable t) {
 					callback.onFailure(t);
 				}

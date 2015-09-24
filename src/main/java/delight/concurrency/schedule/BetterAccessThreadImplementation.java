@@ -143,7 +143,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
         this.finalizedListener.add(new WhenProcessed() {
 
             @Override
-            public void thenDo() {
+            public void onSuccess() {
                 whenProcessed.thenDo();
             }
         });
@@ -167,7 +167,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
         this.executor.shutdown(new WhenExecutorShutDown() {
 
             @Override
-            public void thenDo() {
+            public void onSuccess() {
                 shutDowncallback.onShutdown();
                 shutDowncallback = null;
             }

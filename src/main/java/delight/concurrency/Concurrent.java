@@ -43,7 +43,7 @@ public class Concurrent {
             exc.shutdown(new WhenExecutorShutDown() {
 
                 @Override
-                public void thenDo() {
+                public void onSuccess() {
                     callback.onSuccess(results);
                 }
 

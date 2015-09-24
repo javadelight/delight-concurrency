@@ -272,7 +272,7 @@ public class SequentialOperationScheduler {
         this.executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
 
             @Override
-            public void thenDo() {
+            public void onSuccess() {
                 if (shutDown.compareAndSet(false, true)) {
 
                     shutdownCallback.get().onSuccess(Success.INSTANCE);

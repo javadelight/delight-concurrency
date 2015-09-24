@@ -70,7 +70,7 @@ public abstract class SingleInstanceThread {
         executor.shutdown(new WhenExecutorShutDown() {
 
             @Override
-            public void thenDo() {
+            public void onSuccess() {
                 callback.onSuccess();
             }
 

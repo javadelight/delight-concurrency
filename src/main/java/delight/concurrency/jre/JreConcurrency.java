@@ -75,7 +75,7 @@ public class JreConcurrency implements Concurrency {
 
                     @Override
                     public void shutdown(final WhenExecutorShutDown callback) {
-                        callback.thenDo();
+                        callback.onSuccess();
                     }
 
                     @Override
