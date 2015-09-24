@@ -344,6 +344,10 @@ public class SequentialOperationScheduler {
         this.timeout = timeoutInMs;
     }
 
+    public void setEnforceOwnThread(final boolean value) {
+        this.enforceOwnThread = value;
+    }
+
     public SequentialOperationScheduler(final Concurrency concurrency) {
         super();
         assert concurrency != null;
@@ -360,6 +364,8 @@ public class SequentialOperationScheduler {
         this.operationInProgress = concurrency.newAtomicBoolean(false);
         this.shutDown = concurrency.newAtomicBoolean(false);
         this.timeout = 3000;
+
+        this.enforceOwnThread = false;
 
     }
 
