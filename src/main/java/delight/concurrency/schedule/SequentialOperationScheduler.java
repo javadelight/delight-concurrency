@@ -206,7 +206,7 @@ public final class SequentialOperationScheduler {
                 public void onSuccess(final Object value) {
                     if (operationCompleted.get()) {
                         throw new RuntimeException("Operation [" + entryClosed.operation
-                                + "] successful. Callback cannot be triggered, it was already triggered by a timeout");
+                                + "] successful. Callback cannot be triggered, it was already triggered.");
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
