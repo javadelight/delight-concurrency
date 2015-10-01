@@ -189,10 +189,8 @@ public final class SequentialOperationScheduler {
                 @Override
                 public void onFailure(final Throwable t) {
                     if (operationCompleted.get()) {
-                        throw new RuntimeException(
-                                "Operation [" + entryClosed.operation
-                                        + "] failed. Callback cannot be triggered, it was already triggered by a timeout",
-                                t);
+                        throw new RuntimeException("Operation [" + entryClosed.operation
+                                + "] failed. Callback cannot be triggered, it was already triggered.", t);
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
