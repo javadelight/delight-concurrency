@@ -246,6 +246,8 @@ public final class SequentialOperationScheduler {
                     return;
                 }
 
+                concurrency.newTimer().scheduleOnce(10,
+                        createTest(entryClosed, operationCompleted, operationStartTimestamp));
             }
         };
     }
