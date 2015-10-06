@@ -218,7 +218,7 @@ public final class SequentialOperationScheduler {
                 return;
             }
 
-            final Runnable test = extracted(entryClosed, operationCompleted, operationStartTimestamp);
+            final Runnable test = createTest(entryClosed, operationCompleted, operationStartTimestamp);
 
             concurrency.newTimer().scheduleOnce(timeout, test);
 
@@ -226,25 +226,26 @@ public final class SequentialOperationScheduler {
 
     }
 
-    private Runnable extracted(final OperationEntry<Object> entryClosed, final SimpleAtomicBoolean operationCompleted,
+    private Runnable createTest(final OperationEntry<Object> entryClosed, final SimpleAtomicBoolean operationCompleted,
             final long operationStartTimestamp) {
         return new Runnable() {
 
             @Override
             public void run() {
-                if (operationCompleted.get() == false) {
-                    if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
-
-                        operationCompleted.set(true);
-                        operationInProgress.set(false);
-                        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
-                        entryClosed.callback
-                                .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
-
-                        return;
-                    }
-
+                if (operationCompleted.get() == true) {
+                    return;
                 }
+                if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
+
+                    operationCompleted.set(true);
+                    operationInProgress.set(false);
+                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+                    entryClosed.callback
+                            .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
+
+                    return;
+                }
+
             }
         };
     }
