@@ -23,7 +23,7 @@ public final class SequentialOperationScheduler {
 
     private final LinkedList<OperationEntry<Object>> scheduled;
     private final SimpleExecutor executorForPreventingDeepStacks;
-    private final SimpleExecutor executorForTimeouts;
+    // private final SimpleExecutor executorForTimeouts;
 
     private final Concurrency concurrency;
 
@@ -237,14 +237,9 @@ public final class SequentialOperationScheduler {
                     }
                 }
             };
-            this.executorForTimeouts.execute(new Runnable() {
 
-                @Override
-                public void run() {
-                    test.run();
+            concurrency.newTimer().scheduleOnce(timeout, test);
 
-                }
-            });
         }
 
     }
@@ -312,25 +307,25 @@ public final class SequentialOperationScheduler {
             }
         });
 
-        ops.add(new Operation<Success>() {
-
-            @Override
-            public void apply(final ValueCallback<Success> callback) {
-                executorForTimeouts.shutdown(new WhenExecutorShutDown() {
-
-                    @Override
-                    public void onSuccess() {
-                        callback.onSuccess(Success.INSTANCE);
-                    }
-
-                    @Override
-                    public void onFailure(final Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
-            }
-
-        });
+        // ops.add(new Operation<Success>() {
+        //
+        // @Override
+        // public void apply(final ValueCallback<Success> callback) {
+        // executorForTimeouts.shutdown(new WhenExecutorShutDown() {
+        //
+        // @Override
+        // public void onSuccess() {
+        // callback.onSuccess(Success.INSTANCE);
+        // }
+        //
+        // @Override
+        // public void onFailure(final Throwable t) {
+        // callback.onFailure(t);
+        // }
+        // });
+        // }
+        //
+        // });
 
         AsyncCommon.sequential(ops, AsyncCommon.embed(shutdownCallback.get(), new Closure<List<Success>>() {
 
@@ -363,7 +358,8 @@ public final class SequentialOperationScheduler {
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.executorForPreventingDeepStacks = concurrency.newExecutor().newSingleThreadExecutor(this);
 
-        this.executorForTimeouts = concurrency.newExecutor().newSingleThreadExecutor(this);
+        // this.executorForTimeouts =
+        // concurrency.newExecutor().newSingleThreadExecutor(this);
 
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
