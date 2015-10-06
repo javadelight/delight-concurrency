@@ -218,30 +218,35 @@ public final class SequentialOperationScheduler {
                 return;
             }
 
-            final Runnable test = new Runnable() {
-
-                @Override
-                public void run() {
-                    if (operationCompleted.get() == false) {
-                        if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
-
-                            operationCompleted.set(true);
-                            operationInProgress.set(false);
-                            executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
-                            entryClosed.callback
-                                    .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
-
-                            return;
-                        }
-
-                    }
-                }
-            };
+            final Runnable test = extracted(entryClosed, operationCompleted, operationStartTimestamp);
 
             concurrency.newTimer().scheduleOnce(timeout, test);
 
         }
 
+    }
+
+    private Runnable extracted(final OperationEntry<Object> entryClosed, final SimpleAtomicBoolean operationCompleted,
+            final long operationStartTimestamp) {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                if (operationCompleted.get() == false) {
+                    if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
+
+                        operationCompleted.set(true);
+                        operationInProgress.set(false);
+                        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+                        entryClosed.callback
+                                .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
+
+                        return;
+                    }
+
+                }
+            }
+        };
     }
 
     public void shutdown(final ValueCallback<Success> cb) {
