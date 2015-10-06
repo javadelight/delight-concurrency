@@ -218,11 +218,11 @@ public final class SequentialOperationScheduler {
                 return;
             }
 
-            this.executorForTimeouts.execute(new Runnable() {
+            final Runnable test = new Runnable() {
 
                 @Override
                 public void run() {
-                    while (operationCompleted.get() == false) {
+                    if (operationCompleted.get() == false) {
                         if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
 
                             operationCompleted.set(true);
@@ -234,12 +234,15 @@ public final class SequentialOperationScheduler {
                             return;
                         }
 
-                        try {
-                            Thread.sleep(10);
-                        } catch (final InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
                     }
+                }
+            };
+            this.executorForTimeouts.execute(new Runnable() {
+
+                @Override
+                public void run() {
+                    test.run();
+
                 }
             });
         }
