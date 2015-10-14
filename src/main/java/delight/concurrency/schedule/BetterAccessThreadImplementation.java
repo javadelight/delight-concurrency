@@ -36,7 +36,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
         if (isShutDown.get()) {
             System.err.println(this + ": WARNING Trying to submit task for shutdown worker [" + item + "]");
-            new Exception("here").printStackTrace();
+            // new Exception("here").printStackTrace();
             item.process();
             return;
             // throw new IllegalStateException(
