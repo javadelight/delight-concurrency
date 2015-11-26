@@ -5,6 +5,7 @@ import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.WhenExecutorShutDown;
+import delight.functional.Closure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,49 @@ public class Concurrent {
         final Value<SimpleExecutor> executor = new Value<SimpleExecutor>(null);
 
         sequentialInt(operations, 0, new ArrayList<R>(operations.size()), concurrency, executor, callback);
+
+    }
+
+    public static <R> void sequential(final List<Operation<R>> operations, final Closure<Runnable> asyncExecutor,
+            final ValueCallback<List<R>> callback) {
+        sequentialInt(operations, 0, results, asyncExecutor, callback);
+    }
+
+    private static <R> void sequentialInt(final List<Operation<R>> operations, final int idx, final List<R> results,
+            final Closure<Runnable> asyncExecutor, final ValueCallback<List<R>> callback) {
+
+        if (idx >= operations.size()) {
+            callback.onSuccess(results);
+
+            return;
+        }
+
+        operations.get(idx).apply(new ValueCallback<R>() {
+
+            @Override
+            public void onFailure(final Throwable t) {
+                callback.onFailure(t);
+            }
+
+            @Override
+            public void onSuccess(final R value) {
+                results.add(value);
+
+                if (idx == 0 || idx % 4 != 0) {
+                    sequentialInt(operations, idx + 1, results, asyncExecutor, callback);
+                    return;
+                }
+
+                asyncExecutor.apply(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        sequentialInt(operations, idx + 1, results, asyncExecutor, callback);
+                    }
+                });
+
+            }
+        });
 
     }
 
