@@ -31,7 +31,7 @@ public class Concurrent {
 
     public static <R> void sequential(final List<Operation<R>> operations, final Closure<Runnable> asyncExecutor,
             final ValueCallback<List<R>> callback) {
-        sequentialInt(operations, 0, results, asyncExecutor, callback);
+        sequentialInt(operations, 0, new ArrayList<R>(operations.size()), asyncExecutor, callback);
     }
 
     private static <R> void sequentialInt(final List<Operation<R>> operations, final int idx, final List<R> results,
