@@ -2,9 +2,9 @@ package delight.concurrency;
 
 import delight.async.Operation;
 import delight.async.Value;
+import delight.async.callbacks.SimpleCallback;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.WhenExecutorShutDown;
 import delight.functional.Closure;
 
 import java.util.ArrayList;
@@ -84,16 +84,16 @@ public class Concurrent {
                 return;
             }
 
-            exc.shutdown(new WhenExecutorShutDown() {
-
-                @Override
-                public void onSuccess() {
-                    callback.onSuccess(results);
-                }
+            exc.shutdown(new SimpleCallback() {
 
                 @Override
                 public void onFailure(final Throwable t) {
                     callback.onFailure(t);
+                }
+
+                @Override
+                public void onSuccess() {
+                    callback.onSuccess(results);
                 }
             });
 
