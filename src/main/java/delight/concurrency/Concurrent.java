@@ -67,7 +67,7 @@ public class Concurrent {
             public void onSuccess(final R value) {
                 results.add(value);
 
-                if (idx == 0 || idx % 8 != 0) {
+                if (idx == 0 || idx % 4 != 0) {
                     sequentialInt(operations, idx + 1, results, concurrency, executor, callback);
                     return;
                 }
