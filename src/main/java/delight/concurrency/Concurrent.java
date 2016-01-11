@@ -104,6 +104,7 @@ public class Concurrent {
 
             @Override
             public void onFailure(final Throwable t) {
+
                 callback.onFailure(t);
             }
 
