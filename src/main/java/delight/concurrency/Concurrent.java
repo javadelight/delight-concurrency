@@ -105,7 +105,6 @@ public class Concurrent {
 
             @Override
             public void onFailure(final Throwable t) {
-                System.out.println("operation failed " + t);
 
                 callback.onFailure(t);
             }
