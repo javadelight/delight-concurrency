@@ -136,42 +136,43 @@ public final class SequentialOperationScheduler {
 
         OperationEntry<Object> entry = null;
 
-        if (ENABLE_LOG) {
-            System.out.println(this + ": Running state [" + running.get() + "]");
-        }
-        if (running.get() == false) {
-            running.set(true);
-
-            synchronized (scheduled) {
-
-                // scheduled.poll()
-
-                entry = scheduled.poll();
-            }
-
-            if (entry == null) {
-                running.set(false);
-                tryShutdown();
-                return;
-            }
-
-        } else {
+        synchronized (running) {
             if (ENABLE_LOG) {
-
-                System.out.println(this + ": Still to process " + scheduled.size());
+                System.out.println(this + ": Running state [" + running.get() + "]");
             }
-            if (scheduled.size() == 0) {
+            if (running.get() == false) {
+                running.set(true);
 
-                running.set(false);
-                tryShutdown();
-                return;
-            }
-            synchronized (scheduled) {
+                synchronized (scheduled) {
 
-                entry = scheduled.poll();
+                    // scheduled.poll()
+
+                    entry = scheduled.poll();
+                }
+
+                if (entry == null) {
+                    running.set(false);
+                    tryShutdown();
+                    return;
+                }
+
+            } else {
+                if (ENABLE_LOG) {
+
+                    System.out.println(this + ": Still to process " + scheduled.size());
+                }
+                if (scheduled.size() == 0) {
+
+                    running.set(false);
+                    tryShutdown();
+                    return;
+                }
+                synchronized (scheduled) {
+
+                    entry = scheduled.poll();
+                }
             }
         }
-
         if (entry != null) {
             final OperationEntry<Object> entryClosed = entry;
             this.operationInProgress.set(true);
