@@ -121,6 +121,8 @@ public final class SequentialOperationScheduler {
 
     };
 
+    // TODO can this method be improved (made more efficient, easier to
+    // understand?
     private synchronized final void runIfRequired() {
 
         if (suspendCount.get() > 0) {
