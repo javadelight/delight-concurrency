@@ -161,13 +161,15 @@ public final class SequentialOperationScheduler {
 
                     System.out.println(this + ": Still to process " + scheduled.size());
                 }
-                if (scheduled.size() == 0) {
 
-                    running.set(false);
-                    tryShutdown();
-                    return;
-                }
                 synchronized (scheduled) {
+
+                    if (scheduled.size() == 0) {
+
+                        running.set(false);
+                        tryShutdown();
+                        return;
+                    }
 
                     entry = scheduled.poll();
                 }
