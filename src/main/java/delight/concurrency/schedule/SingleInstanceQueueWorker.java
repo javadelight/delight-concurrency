@@ -46,29 +46,31 @@ public abstract class SingleInstanceQueueWorker<GItem> {
         thread.shutdown(cb);
     }
 
-    public interface QueueShutdownCallback {
-        public void onShutdown();
-
-        public void onFailure(Throwable t);
-    }
-
-    public void requestShutdown(final QueueShutdownCallback callback) {
-        shutDowncallback = callback;
-        shutdownRequested = true;
-        thread.startIfRequired();
-    }
-
     /**
      * Schedules to process this item.
      * 
      * @param item
      */
     public void offer(final GItem item) {
+
+        queue.offer(item);
+
         thread.schedule(new Operation<Object>() {
 
             @Override
             public void apply(final ValueCallback<Object> callback) {
-                queue.offer(item);
+
+                while (queue.size() > 0) {
+                    final List<GItem> items = new ArrayList<GItem>(queue.size());
+
+                    GItem next;
+                    while ((next = queue.poll()) != null) {
+                        items.add(next);
+                        // break;
+                    }
+
+                    processItems(items);
+                }
             }
 
         }, new ValueCallback<Object>() {
