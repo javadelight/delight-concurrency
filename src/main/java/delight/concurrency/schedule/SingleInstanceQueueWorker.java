@@ -24,16 +24,6 @@ public abstract class SingleInstanceQueueWorker<GItem> {
     private final SequentialOperationScheduler thread;
     protected final Queue<GItem> queue;
 
-    private volatile boolean shutdownRequested = false;
-    private volatile boolean isShutDown = false;
-    private volatile QueueShutdownCallback shutDowncallback;
-
-    private final Vector<WhenProcessed> finalizedListener;
-
-    public static interface WhenProcessed {
-        public void thenDo();
-    }
-
     /**
      * It is guaranteed that this method is only called by one worker thread at
      * the time and that the items are forwarded FIFO how they were offered.
@@ -86,29 +76,14 @@ public abstract class SingleInstanceQueueWorker<GItem> {
             }
         });
 
-        synchronized (queue) {
-            if (isShutDown) {
-                throw new IllegalStateException("Cannot submit tasks for a shutdown worker: [" + item + "]");
-            }
-            queue.offer(item);
-        }
     }
 
     public boolean isRunning() {
-        return thread.getIsRunning();
+        return thread.isRunning();
     }
 
-    public SingleInstanceThread getThread() {
+    public SequentialOperationScheduler getThread() {
         return thread;
-    }
-
-    private void callFinalizeListener() {
-        if (finalizedListener.size() > 0) {
-            final ArrayList<WhenProcessed> toProcesses = new ArrayList<WhenProcessed>(finalizedListener);
-            for (final WhenProcessed p : toProcesses) {
-                p.thenDo();
-            }
-        }
     }
 
     /**
@@ -118,7 +93,6 @@ public abstract class SingleInstanceQueueWorker<GItem> {
         super();
         this.thread = null;
         this.queue = null;
-        this.finalizedListener = null;
     }
 
     public SingleInstanceQueueWorker(final SimpleExecutor executor, final Queue<GItem> queue, final Concurrency con) {
