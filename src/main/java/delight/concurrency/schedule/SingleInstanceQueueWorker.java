@@ -1,7 +1,10 @@
 package delight.concurrency.schedule;
 
+import delight.async.Operation;
+import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.wrappers.SimpleExecutor;
+import delight.functional.Success;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,34 +42,8 @@ public abstract class SingleInstanceQueueWorker<GItem> {
      */
     protected abstract void processItems(List<GItem> item);
 
-    /**
-     * This will start an asynchronous worker thread if no worker thread is
-     * already running.
-     */
-    public void startIfRequired() {
-
-        synchronized (queue) {
-            if (queue.size() == 0) {
-                callFinalizeListener();
-                return;
-            }
-            thread.startIfRequired();
-        }
-
-    }
-
-    public void processAllTimens(final WhenProcessed whenProcessed) {
-
-        this.finalizedListener.add(new WhenProcessed() {
-
-            @Override
-            public void thenDo() {
-                finalizedListener.remove(whenProcessed);
-                whenProcessed.thenDo();
-            }
-        });
-
-        this.startIfRequired();
+    public void shutdown(final ValueCallback<Success> cb) {
+        thread.shutdown(cb);
     }
 
     public interface QueueShutdownCallback {
@@ -87,6 +64,26 @@ public abstract class SingleInstanceQueueWorker<GItem> {
      * @param item
      */
     public void offer(final GItem item) {
+        thread.schedule(new Operation<Object>() {
+
+            @Override
+            public void apply(final ValueCallback<Object> callback) {
+                queue.offer(item);
+            }
+
+        }, new ValueCallback<Object>() {
+
+            @Override
+            public void onFailure(final Throwable t) {
+                throw new RuntimeException(t);
+            }
+
+            @Override
+            public void onSuccess(final Object value) {
+
+            }
+        });
+
         synchronized (queue) {
             if (isShutDown) {
                 throw new IllegalStateException("Cannot submit tasks for a shutdown worker: [" + item + "]");
@@ -123,6 +120,8 @@ public abstract class SingleInstanceQueueWorker<GItem> {
     }
 
     public SingleInstanceQueueWorker(final SimpleExecutor executor, final Queue<GItem> queue, final Concurrency con) {
+
+        this.thread = new SequentialOperationScheduler(con);
 
         this.thread = new SingleInstanceThread(executor, con) {
 
