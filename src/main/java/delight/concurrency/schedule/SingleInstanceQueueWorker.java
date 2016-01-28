@@ -3,13 +3,11 @@ package delight.concurrency.schedule;
 import delight.async.Operation;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
-import delight.concurrency.wrappers.SimpleExecutor;
 import delight.functional.Success;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Vector;
 
 /**
  * Allows to build a queue of objects, which are processed sequentially and
@@ -95,44 +93,10 @@ public abstract class SingleInstanceQueueWorker<GItem> {
         this.queue = null;
     }
 
-    public SingleInstanceQueueWorker(final SimpleExecutor executor, final Queue<GItem> queue, final Concurrency con) {
+    public SingleInstanceQueueWorker(final Queue<GItem> queue, final Concurrency con) {
 
         this.thread = new SequentialOperationScheduler(con);
-
-        this.thread = new SingleInstanceThread(executor, con) {
-
-            @Override
-            public void run(final Notifiyer notifiyer) {
-
-                synchronized (queue) {
-
-                    while (queue.size() > 0) {
-                        final List<GItem> items = new ArrayList<GItem>(queue.size());
-
-                        GItem next;
-                        while ((next = queue.poll()) != null) {
-                            items.add(next);
-                            // break;
-                        }
-
-                        processItems(items);
-                    }
-
-                    notifiyer.notifiyFinished();
-
-                    callFinalizeListener();
-
-                    if (shutdownRequested) {
-                        isShutDown = true;
-                        shutDowncallback.onShutdown();
-                    }
-
-                }
-            }
-
-        };
         this.queue = queue;
-        this.finalizedListener = new Vector<SingleInstanceQueueWorker.WhenProcessed>(5);
     }
 
 }
