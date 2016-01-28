@@ -18,7 +18,7 @@ import java.util.Vector;
  */
 public abstract class SingleInstanceQueueWorker<GItem> {
 
-    private final SingleInstanceThread thread;
+    private final SequentialOperationScheduler thread;
     protected final Queue<GItem> queue;
 
     private volatile boolean shutdownRequested = false;
