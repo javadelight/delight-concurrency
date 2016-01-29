@@ -22,6 +22,7 @@ public abstract class SingleInstanceQueueWorker<GItem> {
     private final SequentialOperationScheduler thread;
     protected final Queue<GItem> queue;
     private final Concurrency con;
+    private final int delay = 0;
 
     /**
      * It is guaranteed that this method is only called by one worker thread at
@@ -49,20 +50,20 @@ public abstract class SingleInstanceQueueWorker<GItem> {
             @Override
             public void apply(final ValueCallback<Object> callback) {
 
-                while (queue.size() > 0) {
-                    final List<GItem> items = new ArrayList<GItem>(queue.size());
-
-                    GItem next;
-                    while ((next = queue.poll()) != null) {
-                        items.add(next);
-                        // break;
-                    }
-
-                    processItems(items);
-
+                if (delay == 0) {
+                    perfomActions(callback);
+                    return;
                 }
 
-                callback.onSuccess(Success.INSTANCE);
+                con.newTimer().scheduleOnce(delay, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        perfomActions(callback);
+                    }
+
+                });
+
             }
 
         }, new ValueCallback<Object>() {
@@ -78,6 +79,23 @@ public abstract class SingleInstanceQueueWorker<GItem> {
             }
         });
 
+    }
+
+    private void perfomActions(final ValueCallback<Object> callback) {
+        while (queue.size() > 0) {
+            final List<GItem> items = new ArrayList<GItem>(queue.size());
+
+            GItem next;
+            while ((next = queue.poll()) != null) {
+                items.add(next);
+                // break;
+            }
+
+            processItems(items);
+
+        }
+
+        callback.onSuccess(Success.INSTANCE);
     }
 
     public boolean isRunning() {
