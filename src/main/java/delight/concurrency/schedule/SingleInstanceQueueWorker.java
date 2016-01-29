@@ -22,7 +22,7 @@ public abstract class SingleInstanceQueueWorker<GItem> {
     private final SequentialOperationScheduler thread;
     protected final Queue<GItem> queue;
     private final Concurrency con;
-    private final int delay = 0;
+    private int delay = 0;
 
     /**
      * It is guaranteed that this method is only called by one worker thread at
@@ -104,6 +104,10 @@ public abstract class SingleInstanceQueueWorker<GItem> {
 
     public SequentialOperationScheduler getThread() {
         return thread;
+    }
+
+    public void setDelay(final int delayInMs) {
+        this.delay = delayInMs;
     }
 
     /**
