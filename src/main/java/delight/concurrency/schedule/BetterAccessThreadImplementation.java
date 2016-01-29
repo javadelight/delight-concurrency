@@ -2,8 +2,6 @@ package delight.concurrency.schedule;
 
 import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.Concurrency;
-import delight.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
-import delight.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleLock;
@@ -21,7 +19,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
     protected final Queue<Step> queue;
 
-    private final List<WhenProcessed> finalizedListener;
+    private final List<SimpleCallback> finalizedListener;
 
     Object workerThread;
     final SimpleAtomicBoolean running;
@@ -29,7 +27,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
     final SimpleAtomicBoolean shutdownRequested;
     final SimpleAtomicBoolean isShutDown;
 
-    private volatile QueueShutdownCallback shutDowncallback;
+    private volatile SimpleCallback shutDowncallback;
 
     @Override
     public void offer(final Step item) {
