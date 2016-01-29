@@ -132,18 +132,23 @@ public class BetterAccessThreadImplementation implements AccessThread {
     }
 
     @Override
-    public void addAllOperationsDoneListener(final WhenProcessed whenProcessed) {
+    public void addAllOperationsDoneListener(final SimpleCallback whenProcessed) {
         if (!this.isRunning() && this.queue.size() == 0) {
-            whenProcessed.thenDo();
+            whenProcessed.onSuccess();
             callAllOperationsDoneListener();
             return;
         }
 
-        this.finalizedListener.add(new WhenProcessed() {
+        this.finalizedListener.add(new SimpleCallback() {
 
             @Override
-            public void thenDo() {
-                whenProcessed.thenDo();
+            public void onSuccess() {
+                whenProcessed.onSuccess();
+            }
+
+            @Override
+            public void onFailure(final Throwable t) {
+                whenProcessed.onFailure(t);
             }
         });
 
@@ -151,7 +156,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
     }
 
     @Override
-    public void requestShutdown(final QueueShutdownCallback callback) {
+    public void requestShutdown(final SimpleCallback callback) {
         if (shutDowncallback != null) {
             throw new RuntimeException("Shutdown should only be requested once.");
         }
@@ -167,7 +172,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
             @Override
             public void onSuccess() {
-                shutDowncallback.onShutdown();
+                shutDowncallback.onSuccess();
                 shutDowncallback = null;
             }
 
@@ -185,9 +190,9 @@ public class BetterAccessThreadImplementation implements AccessThread {
     private void callAllOperationsDoneListener() {
         synchronized (finalizedListener) {
             if (finalizedListener.size() > 0) {
-                final ArrayList<WhenProcessed> toProcesses = new ArrayList<WhenProcessed>(finalizedListener);
+                final ArrayList<SimpleCallback> toProcesses = new ArrayList<SimpleCallback>(finalizedListener);
                 this.finalizedListener.clear();
-                for (final WhenProcessed p : toProcesses) {
+                for (final SimpleCallback p : toProcesses) {
                     p.thenDo();
                 }
 
