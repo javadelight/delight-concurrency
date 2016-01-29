@@ -58,7 +58,10 @@ public abstract class SingleInstanceQueueWorker<GItem> {
                     }
 
                     processItems(items);
+
                 }
+
+                callback.onSuccess(Success.INSTANCE);
             }
 
         }, new ValueCallback<Object>() {
