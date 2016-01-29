@@ -364,21 +364,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
         return new SingleInstanceQueueWorker<Step>() {
 
             @Override
-            public void startIfRequired() {
-                BetterAccessThreadImplementation.this.startIfRequired();
-            }
-
-            @Override
-            public void processAllTimens(final WhenProcessed whenProcessed) {
-                BetterAccessThreadImplementation.this.addAllOperationsDoneListener(whenProcessed);
-            }
-
-            @Override
-            public void requestShutdown(final QueueShutdownCallback callback) {
-                BetterAccessThreadImplementation.this.requestShutdown(callback);
-            }
-
-            @Override
             public void offer(final Step item) {
                 BetterAccessThreadImplementation.this.offer(item);
             }
@@ -389,7 +374,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
             }
 
             @Override
-            public SingleInstanceThread getThread() {
+            public SequentialOperationScheduler getThread() {
                 return BetterAccessThreadImplementation.this.asSingleInstanceThread();
             }
 
