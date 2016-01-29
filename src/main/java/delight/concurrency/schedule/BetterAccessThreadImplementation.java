@@ -374,11 +374,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
             }
 
             @Override
-            public SequentialOperationScheduler getThread() {
-                return BetterAccessThreadImplementation.this.asSingleInstanceThread();
-            }
-
-            @Override
             protected void processItems(final List<Step> item) {
                 BetterAccessThreadImplementation.this.processItems(item);
             }
