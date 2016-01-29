@@ -21,6 +21,7 @@ public abstract class SingleInstanceQueueWorker<GItem> {
 
     private final SequentialOperationScheduler thread;
     protected final Queue<GItem> queue;
+    private final Concurrency con;
 
     /**
      * It is guaranteed that this method is only called by one worker thread at
@@ -94,10 +95,11 @@ public abstract class SingleInstanceQueueWorker<GItem> {
         super();
         this.thread = null;
         this.queue = null;
+        this.con = null;
     }
 
     public SingleInstanceQueueWorker(final Queue<GItem> queue, final Concurrency con) {
-
+        this.con = con;
         this.thread = new SequentialOperationScheduler(con);
         this.queue = queue;
     }
