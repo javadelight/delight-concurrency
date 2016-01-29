@@ -193,7 +193,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
                 final ArrayList<SimpleCallback> toProcesses = new ArrayList<SimpleCallback>(finalizedListener);
                 this.finalizedListener.clear();
                 for (final SimpleCallback p : toProcesses) {
-                    p.thenDo();
+                    p.onSuccess();
                 }
 
             }
@@ -211,10 +211,10 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
     @Override
     public void shutdown(final SimpleCallback callback) {
-        this.requestShutdown(new QueueShutdownCallback() {
+        this.requestShutdown(new SimpleCallback() {
 
             @Override
-            public void onShutdown() {
+            public void onSuccess() {
 
                 callback.onSuccess();
             }
@@ -285,8 +285,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
         this.lock = concurrency.newLock();
 
-        this.finalizedListener = concurrency.newCollection()
-                .newThreadSafeList(SingleInstanceQueueWorker.WhenProcessed.class);
+        this.finalizedListener = concurrency.newCollection().newThreadSafeList(SimpleCallback.class);
 
         // this.maxCalltime = -1;
 
