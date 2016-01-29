@@ -2,8 +2,6 @@ package delight.concurrency.schedule;
 
 import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.Concurrency;
-import delight.concurrency.schedule.SingleInstanceQueueWorker.QueueShutdownCallback;
-import delight.concurrency.schedule.SingleInstanceQueueWorker.WhenProcessed;
 import delight.concurrency.wrappers.SimpleExecutor;
 
 /**
@@ -27,9 +25,9 @@ public interface AccessThread {
 
     public void startIfRequired();
 
-    public void addAllOperationsDoneListener(final WhenProcessed whenProcessed);
+    public void addAllOperationsDoneListener(final SimpleCallback whenProcessed);
 
-    public void requestShutdown(final QueueShutdownCallback callback);
+    public void requestShutdown(final SimpleCallback callback);
 
     public void offer(final Step item);
 
