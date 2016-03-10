@@ -123,7 +123,7 @@ public class Concurrent {
             public void onSuccess(final R value) {
 
                 if (results.size() > idx) {
-                    println('here')
+                    System.out.println("here");
                     callback.onFailure(
                             new Exception("Callback for operation was already called: " + operations.get(idx)));
                     return;
