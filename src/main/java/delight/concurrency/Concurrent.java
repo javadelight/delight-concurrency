@@ -120,7 +120,7 @@ public class Concurrent {
 
             @Override
             public void onSuccess(final R value) {
-                System.out.println("Idx " + idx + " " + value);
+                // System.out.println("Idx " + idx + " " + value);
                 if (results.size() > idx) {
                     // System.out.println("here");
                     callback.onFailure(
