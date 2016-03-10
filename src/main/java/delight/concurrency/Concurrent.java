@@ -56,11 +56,12 @@ public class Concurrent {
 
                 // System.out.println("Success " + value);
 
-                if (results.get(idx) != null) {
-                    callback.onFailure(
-                            new Exception("Callback for operation was already called: " + operations.get(idx)));
-                    return;
-                }
+                // if (results.get(idx) != null) {
+                // callback.onFailure(
+                // new Exception("Callback for operation was already called: " +
+                // operations.get(idx)));
+                // return;
+                // }
 
                 results.add(value);
 
@@ -121,7 +122,7 @@ public class Concurrent {
             @Override
             public void onSuccess(final R value) {
 
-                if (results.get(idx) != null) {
+                if (results.size() > idx) {
                     callback.onFailure(
                             new Exception("Callback for operation was already called: " + operations.get(idx)));
                     return;
