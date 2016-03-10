@@ -54,7 +54,7 @@ public class Concurrent {
             @Override
             public void onSuccess(final R value) {
 
-                System.out.println("Success " + value);
+                // System.out.println("Success " + value);
 
                 if (results.get(idx) != null) {
                     callback.onFailure(
@@ -120,6 +120,13 @@ public class Concurrent {
 
             @Override
             public void onSuccess(final R value) {
+
+                if (results.get(idx) != null) {
+                    callback.onFailure(
+                            new Exception("Callback for operation was already called: " + operations.get(idx)));
+                    return;
+                }
+
                 results.add(value);
 
                 if (idx == 0 || idx % 4 != 0) {
