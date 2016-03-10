@@ -57,6 +57,7 @@ public class Concurrent {
                 if (results.get(idx) != null) {
                     callback.onFailure(
                             new Exception("Callback for operation was already called: " + operations.get(idx)));
+                    return;
                 }
 
                 results.add(value);
