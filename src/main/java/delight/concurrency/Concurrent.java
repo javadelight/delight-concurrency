@@ -53,12 +53,12 @@ public class Concurrent {
 
             @Override
             public void onSuccess(final R value) {
-                // if (results.size() > idx - 3) {
-                // callback.onFailure(
-                // new Exception("Callback for operation was already called: " +
-                // operations.get(idx)));
-                // return;
-                // }
+
+                if (results.get(idx) != null) {
+                    callback.onFailure(
+                            new Exception("Callback for operation was already called: " + operations.get(idx)));
+                }
+
                 results.add(value);
 
                 if (idx == 0 || idx % 4 != 0) {
