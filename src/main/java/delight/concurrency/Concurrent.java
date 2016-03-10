@@ -90,7 +90,6 @@ public class Concurrent {
         if (idx >= operations.size()) {
             final SimpleExecutor exc = executor.get();
             if (exc == null) {
-                // System.out.println("No executor required.");
                 callback.onSuccess(results);
                 return;
             }
@@ -121,9 +120,9 @@ public class Concurrent {
 
             @Override
             public void onSuccess(final R value) {
-
+                System.out.println("Idx " + idx);
                 if (results.size() > idx) {
-                    System.out.println("here");
+                    // System.out.println("here");
                     callback.onFailure(
                             new Exception("Callback for operation was already called: " + operations.get(idx)));
                     return;
