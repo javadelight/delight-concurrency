@@ -3,13 +3,13 @@ package delight.concurrency.schedule;
 import delight.async.AsyncCommon;
 import delight.async.Operation;
 import delight.async.Value;
+import delight.async.callbacks.SimpleCallback;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.internal.schedule.OperationEntry;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.WhenExecutorShutDown;
 import delight.functional.Closure;
 import delight.functional.Success;
 
@@ -305,7 +305,7 @@ public final class SequentialOperationScheduler {
 
             @Override
             public void apply(final ValueCallback<Success> callback) {
-                executorForPreventingDeepStacks.shutdown(new WhenExecutorShutDown() {
+                executorForPreventingDeepStacks.shutdown(new SimpleCallback() {
 
                     @Override
                     public void onSuccess() {
