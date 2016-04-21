@@ -220,6 +220,12 @@ public final class SequentialOperationScheduler {
                     }
                 });
             } catch (final Throwable t) {
+                operationCompleted.set(true);
+                operationInProgress.set(false);
+
+                executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
+                entryClosed.callback.onFailure(t);
 
             }
 
