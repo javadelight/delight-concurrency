@@ -223,16 +223,17 @@ public final class SequentialOperationScheduler {
                 return;
             }
 
-            final Runnable test = createTest(entryClosed, operationCompleted, operationStartTimestamp);
+            // final Runnable test = createMonitorForTimouts(entryClosed,
+            // operationCompleted, operationStartTimestamp);
 
-            concurrency.newTimer().scheduleOnce(timeout, test);
+            // concurrency.newTimer().scheduleOnce(timeout, test);
 
         }
 
     }
 
-    private Runnable createTest(final OperationEntry<Object> entryClosed, final SimpleAtomicBoolean operationCompleted,
-            final long operationStartTimestamp) {
+    private Runnable createMonitorForTimouts(final OperationEntry<Object> entryClosed,
+            final SimpleAtomicBoolean operationCompleted, final long operationStartTimestamp) {
         return new Runnable() {
 
             @Override
@@ -252,7 +253,7 @@ public final class SequentialOperationScheduler {
                 }
 
                 concurrency.newTimer().scheduleOnce(10,
-                        createTest(entryClosed, operationCompleted, operationStartTimestamp));
+                        createMonitorForTimouts(entryClosed, operationCompleted, operationStartTimestamp));
             }
         };
     }
