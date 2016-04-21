@@ -225,7 +225,7 @@ public final class SequentialOperationScheduler {
 
             final Runnable test = createMonitorForTimouts(entryClosed, operationCompleted, operationStartTimestamp);
 
-            concurrency.newTimer().scheduleOnce(timeout, test);
+            concurrency.newTimer().scheduleOnce(500, test);
 
         }
 
@@ -251,7 +251,7 @@ public final class SequentialOperationScheduler {
                     return;
                 }
 
-                concurrency.newTimer().scheduleOnce(10,
+                concurrency.newTimer().scheduleOnce(500,
                         createMonitorForTimouts(entryClosed, operationCompleted, operationStartTimestamp));
             }
         };
