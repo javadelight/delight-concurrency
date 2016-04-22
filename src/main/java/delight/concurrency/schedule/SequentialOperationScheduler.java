@@ -215,6 +215,7 @@ public final class SequentialOperationScheduler {
                         operationCompleted.set(true);
                         operationInProgress.set(false);
                         executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
                         entryClosed.callback.onSuccess(value);
 
                     }
