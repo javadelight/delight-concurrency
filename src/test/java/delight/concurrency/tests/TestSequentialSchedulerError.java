@@ -12,6 +12,10 @@ import org.junit.Test;
 
 public class TestSequentialSchedulerError {
 
+    /**
+     * Test that even if an error occurs, further operations can be submitted to
+     * the scheduler.
+     */
     @Test
     public void test() {
 
