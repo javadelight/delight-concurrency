@@ -88,7 +88,7 @@ public class TestSequentialSchedulerError {
 
                         @Override
                         public void apply(final ValueCallback<Success> callback) {
-                            throw new RuntimeException("Error");
+                            callback.onSuccess(Success.INSTANCE);
                         }
 
                     }, AsyncCommon.embed(callback, new Closure<Success>() {
@@ -96,6 +96,7 @@ public class TestSequentialSchedulerError {
                         @Override
                         public void apply(final Success o) {
                             callback.onSuccess(o);
+
                             throw new RuntimeException("Expected Error!");
 
                         }
