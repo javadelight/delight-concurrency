@@ -17,7 +17,7 @@ public class TestSequentialSchedulerError {
      * the scheduler.
      */
     @Test
-    public void test() {
+    public void test_error_in_operation() {
 
         final SequentialOperationScheduler scheduler = new SequentialOperationScheduler(ConcurrencyJre.create());
 
