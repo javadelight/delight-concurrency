@@ -78,27 +78,25 @@ public final class SequentialOperationScheduler {
             throw new IllegalStateException("Trying to schedule operation for shutting down scheduler.");
         }
 
-        synchronized (scheduled) {
-            if (ENABLE_LOG) {
-                System.out.println(this + ": Add operation " + operation);
-            }
-            scheduled.add(new OperationEntry<Object>((Operation<Object>) operation, new ValueCallback<Object>() {
-
-                @Override
-                public void onFailure(final Throwable t) {
-                    callback.onFailure(t);
-                }
-
-                @Override
-                public void onSuccess(final Object value) {
-                    if (ENABLE_LOG) {
-                        System.out.println(SequentialOperationScheduler.this + ": Operation successful " + operation
-                                + " returns [" + value + "]");
-                    }
-                    callback.onSuccess((R) value);
-                }
-            }));
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Add operation " + operation);
         }
+        scheduled.add(new OperationEntry<Object>((Operation<Object>) operation, new ValueCallback<Object>() {
+
+            @Override
+            public void onFailure(final Throwable t) {
+                callback.onFailure(t);
+            }
+
+            @Override
+            public void onSuccess(final Object value) {
+                if (ENABLE_LOG) {
+                    System.out.println(SequentialOperationScheduler.this + ": Operation successful " + operation
+                            + " returns [" + value + "]");
+                }
+                callback.onSuccess((R) value);
+            }
+        }));
 
         if (operationInProgress.get()) {
             return;
@@ -125,42 +123,41 @@ public final class SequentialOperationScheduler {
 
         OperationEntry<Object> entry = null;
 
-        synchronized (running) {
-            if (ENABLE_LOG) {
-                System.out.println(this + ": Running state [" + running.get() + "]");
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Running state [" + running.get() + "]");
+        }
+        if (running.get() == false) {
+            running.set(true);
+
+            synchronized (scheduled) {
+                entry = scheduled.poll();
             }
-            if (running.get() == false) {
-                running.set(true);
 
-                synchronized (scheduled) {
-                    entry = scheduled.poll();
-                }
+            if (entry == null) {
+                running.set(false);
+                tryShutdown();
+                return;
+            }
 
-                if (entry == null) {
+        } else {
+            if (ENABLE_LOG) {
+
+                System.out.println(this + ": Still to process " + scheduled.size());
+            }
+
+            synchronized (scheduled) {
+
+                if (scheduled.size() == 0) {
+
                     running.set(false);
                     tryShutdown();
                     return;
                 }
 
-            } else {
-                if (ENABLE_LOG) {
-
-                    System.out.println(this + ": Still to process " + scheduled.size());
-                }
-
-                synchronized (scheduled) {
-
-                    if (scheduled.size() == 0) {
-
-                        running.set(false);
-                        tryShutdown();
-                        return;
-                    }
-
-                    entry = scheduled.poll();
-                }
+                entry = scheduled.poll();
             }
         }
+
         if (entry != null) {
 
             if (ENABLE_LOG) {
