@@ -22,7 +22,7 @@ public final class SequentialOperationScheduler {
     private static final boolean ENABLE_LOG = false;
 
     private final LinkedList<OperationEntry<Object>> scheduled;
-    private final SimpleExecutor executorForPreventingDeepStacks;
+    private final SimpleExecutor operationExecutor;
     // private final SimpleExecutor executorForTimeouts;
 
     private final Concurrency concurrency;
@@ -224,7 +224,7 @@ public final class SequentialOperationScheduler {
             operationCompleted.set(true);
             operationInProgress.set(false);
 
-            executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+            runIfRequired(true);
 
             entryClosed.callback.onFailure(t);
         }
@@ -243,7 +243,7 @@ public final class SequentialOperationScheduler {
 
                     operationCompleted.set(true);
                     operationInProgress.set(false);
-                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+                    runIfRequired(true);
                     entryClosed.callback
                             .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
 
@@ -304,7 +304,7 @@ public final class SequentialOperationScheduler {
 
             @Override
             public void apply(final ValueCallback<Success> callback) {
-                executorForPreventingDeepStacks.shutdown(new SimpleCallback() {
+                operationExecutor.shutdown(new SimpleCallback() {
 
                     @Override
                     public void onSuccess() {
@@ -348,7 +348,7 @@ public final class SequentialOperationScheduler {
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
-        this.executorForPreventingDeepStacks = concurrency.newExecutor().newSingleThreadExecutor(this);
+        this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
 
         // this.executorForTimeouts =
         // concurrency.newExecutor().newSingleThreadExecutor(this);
