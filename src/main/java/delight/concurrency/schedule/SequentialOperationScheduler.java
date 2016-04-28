@@ -39,6 +39,8 @@ public final class SequentialOperationScheduler {
 
     private int timeout;
 
+    private final SimpleExecutor callbackExecutor;
+
     public boolean isRunning() {
         synchronized (running) {
             return running.get();
@@ -349,6 +351,8 @@ public final class SequentialOperationScheduler {
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
+
+        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(100, this);
 
         // this.executorForTimeouts =
         // concurrency.newExecutor().newSingleThreadExecutor(this);
