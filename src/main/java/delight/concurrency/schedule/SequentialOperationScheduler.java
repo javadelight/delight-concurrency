@@ -18,7 +18,7 @@ import java.util.Queue;
 
 public final class SequentialOperationScheduler {
 
-    private static final boolean ENABLE_LOG = false;
+    private static final boolean ENABLE_LOG = true;
 
     private final Queue<OperationEntry> scheduled;
     private final SimpleExecutor operationExecutor;
