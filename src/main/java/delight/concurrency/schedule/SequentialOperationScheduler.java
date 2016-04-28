@@ -162,7 +162,6 @@ public final class SequentialOperationScheduler {
             }
         }
         if (entry != null) {
-            final OperationEntry<Object> entryClosed = entry;
 
             if (ENABLE_LOG) {
                 System.out.println(this + ": Execute operation " + entry.operation);
@@ -172,13 +171,13 @@ public final class SequentialOperationScheduler {
 
             final long operationStartTimestamp = System.currentTimeMillis();
 
-            executeOperation(entryClosed, operationCompleted);
+            executeOperation(entry, operationCompleted);
 
             if (operationCompleted.get() || shutDown.get()) {
                 return;
             }
 
-            final Runnable test = createMonitorForTimouts(entryClosed, operationCompleted, operationStartTimestamp);
+            final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
 
             concurrency.newTimer().scheduleOnce(500, test);
 
