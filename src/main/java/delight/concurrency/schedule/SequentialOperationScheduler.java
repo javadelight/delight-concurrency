@@ -264,8 +264,15 @@ public final class SequentialOperationScheduler {
                     operationCompleted.set(true);
                     operationInProgress.set(false);
                     runIfRequired(true);
-                    entryClosed.callback
-                            .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
+
+                    callbackExecutor.execute(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            entryClosed.callback
+                                    .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
+                        }
+                    });
 
                     return;
                 }
@@ -369,7 +376,7 @@ public final class SequentialOperationScheduler {
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
 
-        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(100, this);
+        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(50, this);
 
         // this.executorForTimeouts =
         // concurrency.newExecutor().newSingleThreadExecutor(this);
