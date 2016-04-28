@@ -122,7 +122,7 @@ public final class SequentialOperationScheduler {
 
     // TODO can this method be improved (made more efficient, easier to
     // understand?
-    private synchronized final void runIfRequired() {
+    private synchronized final void runIfRequired(final boolean forceOwnThread) {
 
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
@@ -212,7 +212,8 @@ public final class SequentialOperationScheduler {
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
-                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
+                    runIfRequired(true);
 
                     entryClosed.callback.onFailure(t);
 
@@ -226,7 +227,7 @@ public final class SequentialOperationScheduler {
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
-                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+                    runIfRequired(true);
 
                     entryClosed.callback.onSuccess(value);
 
