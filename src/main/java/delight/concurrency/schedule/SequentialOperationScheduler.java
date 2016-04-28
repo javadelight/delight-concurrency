@@ -110,11 +110,14 @@ public final class SequentialOperationScheduler {
         }
 
         if (ENABLE_LOG) {
-            System.out.println(this + ": Is in progress: " + operationInProgress.get());
+            System.out.println(this + ": Test run required. Is in progress: " + operationInProgress.get());
         }
 
         if (!operationInProgress.compareAndSet(false, true)) {
             return;
+        }
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Perform run. Is in progress: " + operationInProgress.get());
         }
 
         OperationEntry<Object> entry = null;
@@ -122,7 +125,7 @@ public final class SequentialOperationScheduler {
         entry = scheduled.poll();
 
         if (entry == null) {
-
+            operationInProgress.set(false);
             tryShutdown();
             return;
         }
