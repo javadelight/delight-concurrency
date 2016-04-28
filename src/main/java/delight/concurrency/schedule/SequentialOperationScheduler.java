@@ -108,6 +108,7 @@ public final class SequentialOperationScheduler {
 
     // TODO can this method be improved (made more efficient, easier to
     // understand?
+    @SuppressWarnings("unchecked")
     private synchronized final void runIfRequired(final boolean forceOwnThread) {
 
         if (suspendCount.get() > 0) {
@@ -129,9 +130,7 @@ public final class SequentialOperationScheduler {
         if (running.get() == false) {
             running.set(true);
 
-            synchronized (scheduled) {
-                entry = scheduled.poll();
-            }
+            entry = scheduled.poll();
 
             if (entry == null) {
                 running.set(false);
