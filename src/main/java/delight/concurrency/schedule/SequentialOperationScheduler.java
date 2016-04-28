@@ -131,10 +131,6 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        if (ENABLE_LOG) {
-            System.out.println(this + ": Execute operation " + entry.operation);
-        }
-
         final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
 
         final long operationStartTimestamp = System.currentTimeMillis();
@@ -153,6 +149,10 @@ public final class SequentialOperationScheduler {
 
     private void executeOperation(final OperationEntry<Object> entryClosed,
             final SimpleAtomicBoolean operationCompleted) {
+
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Execute operation " + entryClosed.operation);
+        }
         try {
 
             entryClosed.operation.apply(new ValueCallback<Object>() {
