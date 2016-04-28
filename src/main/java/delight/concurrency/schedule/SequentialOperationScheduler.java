@@ -146,9 +146,6 @@ public final class SequentialOperationScheduler {
                 running.set(true);
 
                 synchronized (scheduled) {
-
-                    // scheduled.poll()
-
                     entry = scheduled.poll();
                 }
 
@@ -179,7 +176,6 @@ public final class SequentialOperationScheduler {
         }
         if (entry != null) {
             final OperationEntry<Object> entryClosed = entry;
-            this.operationInProgress.set(true);
 
             if (ENABLE_LOG) {
                 System.out.println(this + ": Execute operation " + entry.operation);
@@ -190,6 +186,7 @@ public final class SequentialOperationScheduler {
             final long operationStartTimestamp = System.currentTimeMillis();
 
             try {
+                this.operationInProgress.set(true);
                 entry.operation.apply(new ValueCallback<Object>() {
 
                     @Override
