@@ -159,6 +159,10 @@ public final class SequentialOperationScheduler {
 
                 @Override
                 public void onFailure(final Throwable t) {
+                    if (ENABLE_LOG) {
+                        System.out.println(this + ": Operation failed: " + entryClosed.operation);
+                    }
+
                     if (operationCompleted.get()) {
                         throw new RuntimeException("Operation [" + entryClosed.operation
                                 + "] failed. Callback cannot be triggered, it was already triggered.", t);
@@ -180,6 +184,10 @@ public final class SequentialOperationScheduler {
 
                 @Override
                 public void onSuccess(final Object value) {
+                    if (ENABLE_LOG) {
+                        System.out.println(this + ": Operation successful: " + entryClosed.operation);
+                    }
+
                     if (operationCompleted.get()) {
                         throw new RuntimeException("Operation [" + entryClosed.operation
                                 + "] successful. Callback cannot be triggered, it was already triggered.");
