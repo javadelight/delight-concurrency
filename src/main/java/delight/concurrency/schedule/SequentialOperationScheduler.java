@@ -67,7 +67,7 @@ public final class SequentialOperationScheduler {
 
     public void resume() {
         suspendCount.decrementAndGet();
-        runIfRequired();
+        runIfRequired(enforceOwnThread);
     }
 
     @SuppressWarnings("unchecked")
@@ -103,22 +103,9 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        if (!enforceOwnThread) {
-
-            runIfRequired();
-            return;
-        }
+        runIfRequired(enforceOwnThread);
 
     }
-
-    private final Runnable runIfRequiredRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            runIfRequired();
-        }
-
-    };
 
     // TODO can this method be improved (made more efficient, easier to
     // understand?
