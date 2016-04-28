@@ -185,15 +185,19 @@ public final class SequentialOperationScheduler {
                 @Override
                 public void onSuccess(final Object value) {
                     if (ENABLE_LOG) {
-                        System.out.println(this + ": Operation successful: " + entryClosed.operation);
+                        System.out.println(
+                                SequentialOperationScheduler.this + ": Operation successful: " + entryClosed.operation);
                     }
 
                     if (operationCompleted.get()) {
                         throw new RuntimeException("Operation [" + entryClosed.operation
                                 + "] successful. Callback cannot be triggered, it was already triggered.");
                     }
+
                     operationCompleted.set(true);
+
                     operationInProgress.set(false);
+                    System.out.println(operationInProgress.get());
 
                     runIfRequired(true);
 
