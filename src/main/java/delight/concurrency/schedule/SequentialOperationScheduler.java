@@ -184,10 +184,16 @@ public final class SequentialOperationScheduler {
             final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
 
             final long operationStartTimestamp = System.currentTimeMillis();
-            
-            executorForPreventingDeepStacks.execute([
-                                                     ])
-            
+
+            executorForPreventingDeepStacks.execute(new Runnable() {
+
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+
             try {
                 this.operationInProgress.set(true);
                 entry.operation.apply(new ValueCallback<Object>() {
