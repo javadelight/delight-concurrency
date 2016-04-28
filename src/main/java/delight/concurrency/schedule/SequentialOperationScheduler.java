@@ -13,14 +13,14 @@ import delight.functional.Closure;
 import delight.functional.Success;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public final class SequentialOperationScheduler {
 
     private static final boolean ENABLE_LOG = false;
 
-    private final LinkedList<OperationEntry<Object>> scheduled;
+    private final Queue<OperationEntry> scheduled;
     private final SimpleExecutor operationExecutor;
     // private final SimpleExecutor executorForTimeouts;
 
@@ -369,7 +369,8 @@ public final class SequentialOperationScheduler {
         super();
         assert concurrency != null;
         this.concurrency = concurrency;
-        this.scheduled = new LinkedList<OperationEntry<Object>>();
+        this.scheduled = concurrency.newCollection().newThreadSafeQueue(OperationEntry.class); // new
+                                                                                               // LinkedList<OperationEntry<Object>>();
         this.running = concurrency.newAtomicBoolean(false);
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
