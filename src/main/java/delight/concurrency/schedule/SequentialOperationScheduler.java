@@ -184,8 +184,6 @@ public final class SequentialOperationScheduler {
 
             final long operationStartTimestamp = System.currentTimeMillis();
 
-           
-
             executeOperation(entryClosed, operationCompleted);
 
             if (operationCompleted.get() || shutDown.get()) {
