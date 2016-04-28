@@ -224,7 +224,6 @@ public final class SequentialOperationScheduler {
                 executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
 
                 entryClosed.callback.onFailure(t);
-
             }
 
             if (operationCompleted.get() || shutDown.get()) {
