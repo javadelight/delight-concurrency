@@ -97,10 +97,6 @@ public final class SequentialOperationScheduler {
             }
         }));
 
-        if (operationInProgress.get()) {
-            return;
-        }
-
         runIfRequired(enforceOwnThread);
 
     }
@@ -186,6 +182,7 @@ public final class SequentialOperationScheduler {
                     }
                     operationCompleted.set(true);
                     operationInProgress.set(false);
+
                     runIfRequired(true);
 
                     callbackExecutor.execute(new Runnable() {
