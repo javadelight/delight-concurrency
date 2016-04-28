@@ -40,9 +40,9 @@ public final class SequentialOperationScheduler {
     private final SimpleExecutor callbackExecutor;
 
     public boolean isRunning() {
-        synchronized (running) {
-            return running.get();
-        }
+
+        return operationInProgress.get();
+
     }
 
     /**
@@ -125,37 +125,12 @@ public final class SequentialOperationScheduler {
 
         OperationEntry<Object> entry = null;
 
-        if (ENABLE_LOG) {
-            System.out.println(this + ": Running state [" + running.get() + "]");
-        }
-        if (running.get() == false) {
-            running.set(true);
+        entry = scheduled.poll();
 
-            entry = scheduled.poll();
+        if (entry == null) {
 
-            if (entry == null) {
-                running.set(false);
-                tryShutdown();
-                return;
-            }
-
-        } else {
-            if (ENABLE_LOG) {
-
-                System.out.println(this + ": Still to process " + scheduled.size());
-            }
-
-            synchronized (scheduled) {
-
-                if (scheduled.size() == 0) {
-
-                    running.set(false);
-                    tryShutdown();
-                    return;
-                }
-
-                entry = scheduled.poll();
-            }
+            tryShutdown();
+            return;
         }
 
         if (entry != null) {
