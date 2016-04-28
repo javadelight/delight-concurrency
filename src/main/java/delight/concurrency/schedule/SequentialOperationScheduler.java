@@ -203,7 +203,13 @@ public final class SequentialOperationScheduler {
 
                     runIfRequired(true);
 
-                    entryClosed.callback.onFailure(t);
+                    callbackExecutor.execute(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            entryClosed.callback.onFailure(t);
+                        }
+                    });
 
                 }
 
@@ -217,7 +223,13 @@ public final class SequentialOperationScheduler {
                     operationInProgress.set(false);
                     runIfRequired(true);
 
-                    entryClosed.callback.onSuccess(value);
+                    callbackExecutor.execute(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            entryClosed.callback.onSuccess(value);
+                        }
+                    });
 
                 }
             });
@@ -227,7 +239,14 @@ public final class SequentialOperationScheduler {
 
             runIfRequired(true);
 
-            entryClosed.callback.onFailure(t);
+            callbackExecutor.execute(new Runnable() {
+
+                @Override
+                public void run() {
+                    entryClosed.callback.onFailure(t);
+                }
+            });
+
         }
     }
 
