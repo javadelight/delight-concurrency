@@ -114,7 +114,7 @@ public final class SequentialOperationScheduler {
         }
 
         if (ENABLE_LOG) {
-            System.out.println(this + ": Run if required: " + operationInProgress.get());
+            System.out.println(this + ": Run if required. Is in progress: " + operationInProgress.get());
         }
 
         if (!operationInProgress.compareAndSet(false, true)) {
@@ -197,7 +197,6 @@ public final class SequentialOperationScheduler {
                     operationCompleted.set(true);
 
                     operationInProgress.set(false);
-                    System.out.println(operationInProgress.get());
 
                     runIfRequired(true);
 
