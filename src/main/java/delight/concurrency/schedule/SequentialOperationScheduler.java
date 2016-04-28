@@ -272,18 +272,18 @@ public final class SequentialOperationScheduler {
         }
 
         if (ENABLE_LOG) {
-            System.out.println(this + ": Attempting shutdown; running state: " + running.get());
+            System.out.println(this + ": Attempting shutdown; running state: " + operationInProgress.get());
         }
-        if (running.get() == false) {
-            synchronized (scheduled) {
-                if (ENABLE_LOG) {
-                    System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
-                }
-                if (scheduled.isEmpty()) {
-                    performShutdown();
-                    return;
-                }
+        if (operationInProgress.get() == false) {
+
+            if (ENABLE_LOG) {
+                System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
             }
+            if (scheduled.isEmpty()) {
+                performShutdown();
+                return;
+            }
+
         }
 
     }
@@ -337,7 +337,7 @@ public final class SequentialOperationScheduler {
         this.concurrency = concurrency;
         this.scheduled = concurrency.newCollection().newThreadSafeQueue(OperationEntry.class); // new
                                                                                                // LinkedList<OperationEntry<Object>>();
-        this.running = concurrency.newAtomicBoolean(false);
+
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
