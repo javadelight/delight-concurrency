@@ -184,46 +184,9 @@ public final class SequentialOperationScheduler {
 
             final long operationStartTimestamp = System.currentTimeMillis();
 
-            try {
-                this.operationInProgress.set(true);
-                entry.operation.apply(new ValueCallback<Object>() {
+           
 
-                    @Override
-                    public void onFailure(final Throwable t) {
-                        if (operationCompleted.get()) {
-                            throw new RuntimeException("Operation [" + entryClosed.operation
-                                    + "] failed. Callback cannot be triggered, it was already triggered.", t);
-                        }
-                        operationCompleted.set(true);
-                        operationInProgress.set(false);
-                        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
-
-                        entryClosed.callback.onFailure(t);
-
-                    }
-
-                    @Override
-                    public void onSuccess(final Object value) {
-                        if (operationCompleted.get()) {
-                            throw new RuntimeException("Operation [" + entryClosed.operation
-                                    + "] successful. Callback cannot be triggered, it was already triggered.");
-                        }
-                        operationCompleted.set(true);
-                        operationInProgress.set(false);
-                        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
-
-                        entryClosed.callback.onSuccess(value);
-
-                    }
-                });
-            } catch (final Throwable t) {
-                operationCompleted.set(true);
-                operationInProgress.set(false);
-
-                executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
-
-                entryClosed.callback.onFailure(t);
-            }
+            executeOperation(entryClosed, operationCompleted);
 
             if (operationCompleted.get() || shutDown.get()) {
                 return;
@@ -235,6 +198,50 @@ public final class SequentialOperationScheduler {
 
         }
 
+    }
+
+    private void executeOperation(final OperationEntry<Object> entryClosed,
+            final SimpleAtomicBoolean operationCompleted) {
+        try {
+            this.operationInProgress.set(true);
+            entryClosed.operation.apply(new ValueCallback<Object>() {
+
+                @Override
+                public void onFailure(final Throwable t) {
+                    if (operationCompleted.get()) {
+                        throw new RuntimeException("Operation [" + entryClosed.operation
+                                + "] failed. Callback cannot be triggered, it was already triggered.", t);
+                    }
+                    operationCompleted.set(true);
+                    operationInProgress.set(false);
+                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
+                    entryClosed.callback.onFailure(t);
+
+                }
+
+                @Override
+                public void onSuccess(final Object value) {
+                    if (operationCompleted.get()) {
+                        throw new RuntimeException("Operation [" + entryClosed.operation
+                                + "] successful. Callback cannot be triggered, it was already triggered.");
+                    }
+                    operationCompleted.set(true);
+                    operationInProgress.set(false);
+                    executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
+                    entryClosed.callback.onSuccess(value);
+
+                }
+            });
+        } catch (final Throwable t) {
+            operationCompleted.set(true);
+            operationInProgress.set(false);
+
+            executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
+
+            entryClosed.callback.onFailure(t);
+        }
     }
 
     private Runnable createMonitorForTimouts(final OperationEntry<Object> entryClosed,
