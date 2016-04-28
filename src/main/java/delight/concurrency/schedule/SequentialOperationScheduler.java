@@ -89,10 +89,6 @@ public final class SequentialOperationScheduler {
 
             @Override
             public void onSuccess(final Object value) {
-                if (ENABLE_LOG) {
-                    System.out.println(SequentialOperationScheduler.this + ": Operation successful " + operation
-                            + " returns [" + value + "]");
-                }
                 callback.onSuccess((R) value);
             }
         }));
@@ -213,7 +209,7 @@ public final class SequentialOperationScheduler {
                 }
             });
         } catch (final Throwable t) {
-            operationCompleted.set(true);
+
             operationInProgress.set(false);
 
             runIfRequired(true);
@@ -222,6 +218,7 @@ public final class SequentialOperationScheduler {
 
                 @Override
                 public void run() {
+                    operationCompleted.set(true);
                     entryClosed.callback.onFailure(t);
                 }
             });
