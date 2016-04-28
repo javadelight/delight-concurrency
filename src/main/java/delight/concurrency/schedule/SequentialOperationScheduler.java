@@ -26,7 +26,6 @@ public final class SequentialOperationScheduler {
 
     private final Concurrency concurrency;
 
-    private final SimpleAtomicBoolean running;
     private final SimpleAtomicBoolean shuttingDown;
     private final SimpleAtomicBoolean shutDown;
     private final SimpleAtomicInteger suspendCount;
@@ -53,7 +52,7 @@ public final class SequentialOperationScheduler {
      */
     public boolean suspendIfPossible() {
 
-        if (!running.get()) {
+        if (!operationInProgress.get()) {
             suspend();
             return true;
         }
@@ -122,6 +121,8 @@ public final class SequentialOperationScheduler {
             return;
         }
 
+        this.operationInProgress.set(true);
+
         OperationEntry<Object> entry = null;
 
         if (ENABLE_LOG) {
@@ -184,7 +185,7 @@ public final class SequentialOperationScheduler {
     private void executeOperation(final OperationEntry<Object> entryClosed,
             final SimpleAtomicBoolean operationCompleted) {
         try {
-            this.operationInProgress.set(true);
+
             entryClosed.operation.apply(new ValueCallback<Object>() {
 
                 @Override
