@@ -163,11 +163,6 @@ public final class SequentialOperationScheduler {
                         System.out.println(this + ": Operation failed: " + entryClosed.operation);
                     }
 
-                    if (operationCompleted.get()) {
-                        throw new RuntimeException("Operation [" + entryClosed.operation
-                                + "] failed. Callback cannot be triggered, it was already triggered.", t);
-                    }
-                    operationCompleted.set(true);
                     operationInProgress.set(false);
 
                     runIfRequired(true);
@@ -176,6 +171,14 @@ public final class SequentialOperationScheduler {
 
                         @Override
                         public void run() {
+                            if (operationCompleted.get()) {
+                                throw new RuntimeException(
+                                        "Operation [" + entryClosed.operation
+                                                + "] failed. Callback cannot be triggered, it was already triggered.",
+                                        t);
+                            }
+                            operationCompleted.set(true);
+
                             entryClosed.callback.onFailure(t);
                         }
                     });
@@ -189,13 +192,6 @@ public final class SequentialOperationScheduler {
                                 SequentialOperationScheduler.this + ": Operation successful: " + entryClosed.operation);
                     }
 
-                    if (operationCompleted.get()) {
-                        throw new RuntimeException("Operation [" + entryClosed.operation
-                                + "] successful. Callback cannot be triggered, it was already triggered.");
-                    }
-
-                    operationCompleted.set(true);
-
                     operationInProgress.set(false);
 
                     runIfRequired(true);
@@ -204,6 +200,12 @@ public final class SequentialOperationScheduler {
 
                         @Override
                         public void run() {
+                            if (operationCompleted.get()) {
+                                throw new RuntimeException("Operation [" + entryClosed.operation
+                                        + "] successful. Callback cannot be triggered, it was already triggered.");
+                            }
+                            operationCompleted.set(true);
+
                             entryClosed.callback.onSuccess(value);
                         }
                     });
