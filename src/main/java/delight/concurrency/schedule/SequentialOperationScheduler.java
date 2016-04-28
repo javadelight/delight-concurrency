@@ -113,6 +113,10 @@ public final class SequentialOperationScheduler {
             return;
         }
 
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Run if required: " + operationInProgress.get());
+        }
+
         if (!operationInProgress.compareAndSet(false, true)) {
             return;
         }
