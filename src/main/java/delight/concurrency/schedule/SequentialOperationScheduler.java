@@ -376,7 +376,7 @@ public final class SequentialOperationScheduler {
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
         this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
 
-        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(50, this);
+        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(10, this);
 
         // this.executorForTimeouts =
         // concurrency.newExecutor().newSingleThreadExecutor(this);
