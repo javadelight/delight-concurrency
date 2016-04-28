@@ -109,7 +109,6 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        executorForPreventingDeepStacks.execute(runIfRequiredRunnable);
     }
 
     private final Runnable runIfRequiredRunnable = new Runnable() {
