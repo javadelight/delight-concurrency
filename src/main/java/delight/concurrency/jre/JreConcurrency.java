@@ -246,8 +246,8 @@ public class JreConcurrency implements Concurrency {
             }
         };
 
-        final ExecutorService executor = new ThreadPoolExecutor(capacity, capacity, 50, TimeUnit.MILLISECONDS,
-                workQueue, threadFactory, rejectedExecutionHandler);
+        final ExecutorService executor = new ThreadPoolExecutor(0, capacity, 50, TimeUnit.MILLISECONDS, workQueue,
+                threadFactory, rejectedExecutionHandler);
         return executor;
     }
 
