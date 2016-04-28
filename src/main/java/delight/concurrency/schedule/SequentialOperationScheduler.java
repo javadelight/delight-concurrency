@@ -3,7 +3,6 @@ package delight.concurrency.schedule;
 import delight.async.AsyncCommon;
 import delight.async.Operation;
 import delight.async.Value;
-import delight.async.callbacks.SimpleCallback;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.internal.schedule.OperationEntry;
@@ -306,19 +305,18 @@ public final class SequentialOperationScheduler {
 
             @Override
             public void apply(final ValueCallback<Success> callback) {
-                operationExecutor.shutdown(new SimpleCallback() {
-
-                    @Override
-                    public void onSuccess() {
-                        callback.onSuccess(Success.INSTANCE);
-                    }
-
-                    @Override
-                    public void onFailure(final Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
+                operationExecutor.shutdown(AsyncCommon.asSimpleCallback(callback));
             }
+        });
+
+        ops.add(new Operation<Success>() {
+
+            @Override
+            public void apply(final ValueCallback<Success> callback) {
+                callbackExecutor.shutdown(AsyncCommon.asSimpleCallback(callback));
+
+            }
+
         });
 
         AsyncCommon.sequential(ops, AsyncCommon.embed(shutdownCallback.get(), new Closure<List<Success>>() {
