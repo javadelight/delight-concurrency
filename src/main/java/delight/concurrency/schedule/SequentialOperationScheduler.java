@@ -117,11 +117,9 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        if (operationInProgress.get()) {
+        if (!operationInProgress.compareAndSet(false, true)) {
             return;
         }
-
-        this.operationInProgress.set(true);
 
         OperationEntry<Object> entry = null;
 
@@ -133,27 +131,23 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        if (entry != null) {
-
-            if (ENABLE_LOG) {
-                System.out.println(this + ": Execute operation " + entry.operation);
-            }
-
-            final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
-
-            final long operationStartTimestamp = System.currentTimeMillis();
-
-            executeOperation(entry, operationCompleted);
-
-            if (operationCompleted.get() || shutDown.get()) {
-                return;
-            }
-
-            final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
-
-            concurrency.newTimer().scheduleOnce(500, test);
-
+        if (ENABLE_LOG) {
+            System.out.println(this + ": Execute operation " + entry.operation);
         }
+
+        final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
+
+        final long operationStartTimestamp = System.currentTimeMillis();
+
+        executeOperation(entry, operationCompleted);
+
+        if (operationCompleted.get() || shutDown.get()) {
+            return;
+        }
+
+        final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
+
+        concurrency.newTimer().scheduleOnce(500, test);
 
     }
 
