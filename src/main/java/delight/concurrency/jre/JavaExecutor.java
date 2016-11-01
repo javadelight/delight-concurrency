@@ -6,11 +6,11 @@ import delight.concurrency.wrappers.SimpleExecutor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
-    private final ExecutorService executor;
+    private final ThreadPoolExecutor executor;
 
     @Override
     public void execute(final Callable<Object> callable, final int timeout) {
@@ -82,9 +82,15 @@ public class JavaExecutor implements SimpleExecutor {
 
     }
 
-    public JavaExecutor(final ExecutorService executor) {
+    public JavaExecutor(final ThreadPoolExecutor executor) {
         super();
         this.executor = executor;
+    }
+
+    @Override
+    public int pendingTasks() {
+
+        return executor.getQueue().size();
     }
 
 }
