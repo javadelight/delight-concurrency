@@ -89,6 +89,11 @@ public class JreConcurrency implements Concurrency {
                         }
                     }
 
+                    @Override
+                    public int pendingTasks() {
+                        return 0;
+                    }
+
                 };
             }
 

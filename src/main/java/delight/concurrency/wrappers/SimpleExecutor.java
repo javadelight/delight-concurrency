@@ -15,6 +15,8 @@ public interface SimpleExecutor {
      */
     public void execute(Runnable runnable);
 
+    public int pendingTasks();
+
     /**
      * 
      * @param runnable
