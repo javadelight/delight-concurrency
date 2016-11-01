@@ -232,7 +232,12 @@ public class JreConcurrency implements Concurrency {
 
     private static ExecutorService newExecutorJvm(final int capacity, final Object owner) {
         final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
-        final String threadName = owner.getClass().getName();
+        final String threadName;
+        if (owner instanceof String) {
+            owner = owner;
+        } else {
+            owner = owner.getClass().getName();
+        }
 
         final ThreadFactory threadFactory;
         if (!isAndroid()) {
