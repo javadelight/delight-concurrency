@@ -66,15 +66,15 @@ public class JavaExecutor implements SimpleExecutor {
 
     }
 
-    public JavaExecutor(final ExecutorService executor) {
-        super();
-        this.executor = executor;
-    }
-
     @Override
     public Object getCurrentThread() {
 
         return Thread.currentThread();
+    }
+
+    public JavaExecutor(final ExecutorService executor) {
+        super();
+        this.executor = executor;
     }
 
 }
