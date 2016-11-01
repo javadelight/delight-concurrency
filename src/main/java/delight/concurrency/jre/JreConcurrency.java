@@ -234,9 +234,9 @@ public class JreConcurrency implements Concurrency {
         final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
         final String threadName;
         if (owner instanceof String) {
-            owner = owner;
+            threadName = (String) owner;
         } else {
-            owner = owner.getClass().getName();
+            threadName = owner.getClass().getName();
         }
 
         final ThreadFactory threadFactory;
