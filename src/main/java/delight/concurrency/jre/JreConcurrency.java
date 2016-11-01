@@ -79,12 +79,6 @@ public class JreConcurrency implements Concurrency {
                         callback.onSuccess();
                     }
 
-                    @Override
-                    public Object getCurrentThread() {
-
-                        return Thread.currentThread();
-                    }
-
                 };
             }
 

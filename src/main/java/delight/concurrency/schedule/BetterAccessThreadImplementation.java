@@ -227,12 +227,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
     }
 
     @Override
-    public Object currentThread() {
-
-        return getExecutor().getCurrentThread();
-    }
-
-    @Override
     public SimpleExecutor getExecutor() {
         return executor;
     }
