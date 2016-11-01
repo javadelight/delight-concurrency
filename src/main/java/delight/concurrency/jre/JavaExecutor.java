@@ -18,6 +18,12 @@ public class JavaExecutor implements SimpleExecutor {
 
         callables.add(callable);
 
+        try {
+            executor.invokeAll(callables, timeout, TimeUnit.MILLISECONDS);
+        } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
