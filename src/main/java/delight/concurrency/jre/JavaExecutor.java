@@ -3,43 +3,44 @@ package delight.concurrency.jre;
 import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
     private final ExecutorService executor;
 
-    Thread lastThread;
+    // Thread lastThread;
 
     @Override
     public void execute(final Runnable runnable) {
-        final CountDownLatch latch = new CountDownLatch(2);
-
-        assert !executor.isShutdown() && !executor.isTerminated() : "Cannot execute task as executor is shut down. "
-                + executor.toString() + " " + runnable;
+        /*
+         * final CountDownLatch latch = new CountDownLatch(2);
+         * 
+         * assert !executor.isShutdown() && !executor.isTerminated() :
+         * "Cannot execute task as executor is shut down. " +
+         * executor.toString() + " " + runnable;
+         */
 
         executor.execute(new Runnable() {
 
             @Override
             public void run() {
-                lastThread = Thread.currentThread();
-                latch.countDown();
+                // lastThread = Thread.currentThread();
+                // latch.countDown();
                 runnable.run();
             }
         });
 
-        latch.countDown();
-
-        if (lastThread == null) {
-            try {
-                latch.await(5000, TimeUnit.MILLISECONDS);
-            } catch (final InterruptedException e) {
-                throw new RuntimeException("Cannot determine handle of thread to be executed.");
-            }
-        }
-
-        return lastThread;
+        /*
+         * latch.countDown();
+         * 
+         * if (lastThread == null) { try { latch.await(5000,
+         * TimeUnit.MILLISECONDS); } catch (final InterruptedException e) {
+         * throw new RuntimeException(
+         * "Cannot determine handle of thread to be executed."); } }
+         * 
+         * return lastThread;
+         */
     }
 
     @Override
@@ -64,12 +65,6 @@ public class JavaExecutor implements SimpleExecutor {
         t.start();
         t = null;
 
-    }
-
-    @Override
-    public Object getCurrentThread() {
-
-        return Thread.currentThread();
     }
 
     public JavaExecutor(final ExecutorService executor) {

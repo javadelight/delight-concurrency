@@ -13,13 +13,6 @@ public interface SimpleExecutor {
      */
     public void execute(Runnable runnable);
 
-    /**
-     * Returns the current thread of the caller.
-     * 
-     * @return
-     */
-    public Object getCurrentThread();
-
     public void shutdown(SimpleCallback callback);
 
 }
