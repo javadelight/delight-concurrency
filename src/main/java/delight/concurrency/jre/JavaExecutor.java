@@ -13,7 +13,7 @@ public class JavaExecutor implements SimpleExecutor {
     Thread lastThread;
 
     @Override
-    public Object execute(final Runnable runnable) {
+    public void execute(final Runnable runnable) {
         final CountDownLatch latch = new CountDownLatch(2);
 
         assert !executor.isShutdown() && !executor.isTerminated() : "Cannot execute task as executor is shut down. "

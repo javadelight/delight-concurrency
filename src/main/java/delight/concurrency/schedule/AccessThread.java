@@ -40,7 +40,7 @@ public interface AccessThread {
      * 
      * @return
      */
-    public Object getSystemThread();
+    // public Object getSystemThread();
 
     /**
      * The current thread.
