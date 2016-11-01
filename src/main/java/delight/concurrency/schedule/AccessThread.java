@@ -47,7 +47,7 @@ public interface AccessThread {
      * 
      * @return
      */
-    public Object currentThread();
+    // public Object currentThread();
 
     public SingleInstanceThread asSingleInstanceThread();
 

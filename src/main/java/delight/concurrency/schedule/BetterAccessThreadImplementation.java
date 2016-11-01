@@ -283,13 +283,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
         // this.maxCalltime = -1;
 
-        this.workerThread = this.executor.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                // do nothing
-            }
-        });
     }
 
     @Override
