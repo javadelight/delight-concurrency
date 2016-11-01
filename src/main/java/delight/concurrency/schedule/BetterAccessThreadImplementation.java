@@ -21,7 +21,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
 
     private final List<SimpleCallback> finalizedListener;
 
-    Object workerThread;
+    // Object workerThread;
     final SimpleAtomicBoolean running;
 
     final SimpleAtomicBoolean shutdownRequested;
