@@ -11,7 +11,7 @@ public interface SimpleExecutor {
      * @param runnable
      * @return
      */
-    public Object execute(Runnable runnable);
+    public void execute(Runnable runnable);
 
     /**
      * Returns the current thread of the caller.
