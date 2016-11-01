@@ -21,6 +21,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -77,6 +78,15 @@ public class JreConcurrency implements Concurrency {
                     @Override
                     public void shutdown(final SimpleCallback callback) {
                         callback.onSuccess();
+                    }
+
+                    @Override
+                    public void execute(final Callable<Object> callable, final int timeout) {
+                        try {
+                            callable.call();
+                        } catch (final Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
 
                 };
