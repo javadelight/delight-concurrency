@@ -71,7 +71,7 @@ public class BetterAccessThreadImplementation implements AccessThread {
             return;
         }
 
-        workerThread = executor.execute(new Runnable() {
+        executor.execute(new Runnable() {
 
             @Override
             public void run() {
@@ -227,12 +227,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
     }
 
     @Override
-    public Object getSystemThread() {
-
-        return workerThread;
-    }
-
-    @Override
     public Object currentThread() {
 
         return getExecutor().getCurrentThread();
@@ -322,11 +316,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
                         callback.onFailure(t);
                     }
                 });
-            }
-
-            @Override
-            public Object getWorkerThread() {
-                return BetterAccessThreadImplementation.this.getSystemThread();
             }
 
             @Override

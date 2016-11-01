@@ -26,22 +26,19 @@ public abstract class SingleInstanceThread {
     // private long maxCalltime;
     private final Notifiyer notifiyer;
 
-    private Object workerThread;
-
     public void startIfRequired() {
 
         /*
          * if (maxCalltime > -1 && lastCall > -1 && (System.currentTimeMillis()
-         * - lastCall) > maxCalltime) { isRunning.set(false); new
-         * Exception("Worker thread was manually reset.")
-         * .printStackTrace(System.err); }
+         * - lastCall) > maxCalltime) { isRunning.set(false); new Exception(
+         * "Worker thread was manually reset.") .printStackTrace(System.err); }
          */
 
         if (!isRunning.compareAndSet(false, true)) {
             return;
         }
 
-        workerThread = executor.execute(new Runnable() {
+        executor.execute(new Runnable() {
 
             @Override
             public void run() {
@@ -80,10 +77,6 @@ public abstract class SingleInstanceThread {
             }
         });
 
-    }
-
-    public Object getWorkerThread() {
-        return workerThread;
     }
 
     public class Notifiyer {
