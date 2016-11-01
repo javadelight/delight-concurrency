@@ -16,6 +16,14 @@ public class JavaExecutor implements SimpleExecutor {
     public void execute(final Runnable runnable, final int timeout) {
         final List<Callable<Object>> callables = new ArrayList<Callable<Object>>();
 
+        callables.add(new Callable<Object>() {
+
+            @Override
+            public Object call() throws Exception {
+                runnable.run();
+                return null;
+            }
+        });
     }
 
     @Override
