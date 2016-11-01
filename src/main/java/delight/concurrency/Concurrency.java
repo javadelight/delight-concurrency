@@ -20,8 +20,6 @@ public interface Concurrency {
 
     public abstract ExecutorFactory newExecutor();
 
-    public abstract void runLater(Runnable runnable);
-
     public abstract SimpleLock newLock();
 
     public abstract CollectionFactory newCollection();
