@@ -13,17 +13,11 @@ public class JavaExecutor implements SimpleExecutor {
     private final ExecutorService executor;
 
     @Override
-    public void execute(final Runnable runnable, final int timeout) {
+    public void execute(final Callable<Object> callable, final int timeout) {
         final List<Callable<Object>> callables = new ArrayList<Callable<Object>>();
 
-        callables.add(new Callable<Object>() {
+        callables.add(callable);
 
-            @Override
-            public Object call() throws Exception {
-                runnable.run();
-                return null;
-            }
-        });
     }
 
     @Override
