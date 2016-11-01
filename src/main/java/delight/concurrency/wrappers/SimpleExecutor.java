@@ -13,6 +13,14 @@ public interface SimpleExecutor {
      */
     public void execute(Runnable runnable);
 
+    /**
+     * 
+     * @param runnable
+     * @param timeout
+     *            The timeout in ms when the task should cancel.
+     */
+    public void execute(Runnable runnable, int timeout);
+
     public void shutdown(SimpleCallback callback);
 
 }

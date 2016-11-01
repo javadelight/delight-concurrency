@@ -3,13 +3,20 @@ package delight.concurrency.jre;
 import delight.async.callbacks.SimpleCallback;
 import delight.concurrency.wrappers.SimpleExecutor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
     private final ExecutorService executor;
 
-    // Thread lastThread;
+    @Override
+    public void execute(final Runnable runnable, final int timeout) {
+        final List<Callable<Object>> callables = new ArrayList<Callable<Object>>();
+
+    }
 
     @Override
     public void execute(final Runnable runnable) {
