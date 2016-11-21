@@ -2,8 +2,6 @@ package delight.concurrency.wrappers;
 
 import delight.async.callbacks.SimpleCallback;
 
-import java.util.concurrent.Callable;
-
 public interface SimpleExecutor {
 
     /**
@@ -23,7 +21,7 @@ public interface SimpleExecutor {
      * @param timeout
      *            The timeout in ms when the task should cancel.
      */
-    public void execute(Callable<Object> callable, int timeout);
+    public void execute(Runnable runnable, int timeout);
 
     public void shutdown(SimpleCallback callback);
 

@@ -1,61 +1,47 @@
 package delight.concurrency.jre;
 
 import delight.async.callbacks.SimpleCallback;
+import delight.concurrency.factories.TimerFactory;
 import delight.concurrency.wrappers.SimpleExecutor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
     private final ThreadPoolExecutor executor;
+    private final TimerFactory timers;
 
     @Override
-    public void execute(final Callable<Object> callable, final int timeout) {
-        final List<Callable<Object>> callables = new ArrayList<Callable<Object>>();
+    public void execute(final Runnable runnable, final int timeout) {
 
-        callables.add(callable);
+        final Future<?> future = executor.submit(runnable);
 
-        try {
-            executor.invokeAll(callables, timeout, TimeUnit.MILLISECONDS);
-        } catch (final InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        timers.scheduleOnce(timeout, new Runnable() {
+
+            @Override
+            public void run() {
+                if (!future.isDone()) {
+                    future.cancel(true);
+                    System.err.println(this + ": Task exceeded timeout of " + timeout + " ms (Task: " + runnable + ")");
+                }
+            }
+        });
 
     }
 
     @Override
     public void execute(final Runnable runnable) {
-        /*
-         * final CountDownLatch latch = new CountDownLatch(2);
-         * 
-         * assert !executor.isShutdown() && !executor.isTerminated() :
-         * "Cannot execute task as executor is shut down. " +
-         * executor.toString() + " " + runnable;
-         */
 
         executor.execute(new Runnable() {
 
             @Override
             public void run() {
-                // lastThread = Thread.currentThread();
-                // latch.countDown();
+
                 runnable.run();
             }
         });
 
-        /*
-         * latch.countDown();
-         * 
-         * if (lastThread == null) { try { latch.await(5000,
-         * TimeUnit.MILLISECONDS); } catch (final InterruptedException e) {
-         * throw new RuntimeException(
-         * "Cannot determine handle of thread to be executed."); } }
-         * 
-         * return lastThread;
-         */
     }
 
     @Override
@@ -82,9 +68,10 @@ public class JavaExecutor implements SimpleExecutor {
 
     }
 
-    public JavaExecutor(final ThreadPoolExecutor executor) {
+    public JavaExecutor(final ThreadPoolExecutor executor, final JreConcurrency concurrency) {
         super();
         this.executor = executor;
+        this.timers = concurrency.newTimer();
     }
 
     @Override

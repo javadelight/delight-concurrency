@@ -21,7 +21,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -54,14 +53,14 @@ public class JreConcurrency implements Concurrency {
             public SimpleExecutor newSingleThreadExecutor(final Object owner) {
                 final ThreadPoolExecutor executor = newExecutor(1, owner);
 
-                return new JavaExecutor(executor);
+                return new JavaExecutor(executor, JreConcurrency.this);
             }
 
             @Override
             public SimpleExecutor newParallelExecutor(final int maxParallelThreads, final Object owner) {
                 final ThreadPoolExecutor executor = newExecutor(maxParallelThreads, owner);
 
-                return new JavaExecutor(executor);
+                return new JavaExecutor(executor, JreConcurrency.this);
             }
 
             @Override
@@ -80,12 +79,8 @@ public class JreConcurrency implements Concurrency {
                     }
 
                     @Override
-                    public void execute(final Callable<Object> callable, final int timeout) {
-                        try {
-                            callable.call();
-                        } catch (final Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                    public void execute(final Runnable runnable, final int timeout) {
+                        runnable.run();
                     }
 
                     @Override
@@ -247,8 +242,8 @@ public class JreConcurrency implements Concurrency {
             }
         };
 
-        final ThreadPoolExecutor executor = new ThreadPoolExecutor(0, capacity, 50, TimeUnit.MILLISECONDS, workQueue,
-                threadFactory, rejectedExecutionHandler);
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(capacity, capacity, 50, TimeUnit.MILLISECONDS,
+                workQueue, threadFactory, rejectedExecutionHandler);
 
         return executor;
     }
