@@ -101,7 +101,7 @@ public final class SequentialOperationScheduler {
     // TODO can this method be improved (made more efficient, easier to
     // understand?
     @SuppressWarnings("unchecked")
-    private synchronized final void runIfRequired(final boolean forceOwnThread) {
+    private final void runIfRequired(final boolean forceOwnThread) {
 
         if (suspendCount.get() > 0) {
             if (ENABLE_LOG) {
@@ -135,7 +135,20 @@ public final class SequentialOperationScheduler {
 
         final long operationStartTimestamp = System.currentTimeMillis();
 
-        executeOperation(entry, operationCompleted);
+        if (!enforceOwnThread) {
+
+            executeOperation(entry, operationCompleted);
+        } else {
+            final OperationEntry<Object> entryClosed = entry;
+            operationExecutor.execute(new Runnable() {
+
+                @Override
+                public void run() {
+                    executeOperation(entryClosed, operationCompleted);
+                }
+
+            }, timeout);
+        }
 
         if (operationCompleted.get() || shutDown.get()) {
             return;
@@ -357,9 +370,6 @@ public final class SequentialOperationScheduler {
         this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
 
         this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(10, this);
-
-        // this.executorForTimeouts =
-        // concurrency.newExecutor().newSingleThreadExecutor(this);
 
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
