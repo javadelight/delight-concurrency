@@ -143,7 +143,7 @@ public final class SequentialOperationScheduler {
 
         final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
 
-        concurrency.newTimer().scheduleOnce(timeout, test);
+        concurrency.newTimer().scheduleOnce(timeout + 100, test);
 
     }
 
