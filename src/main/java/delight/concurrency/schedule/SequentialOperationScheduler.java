@@ -350,8 +350,7 @@ public final class SequentialOperationScheduler {
         super();
         assert concurrency != null;
         this.concurrency = concurrency;
-        this.scheduled = concurrency.newCollection().newThreadSafeQueue(OperationEntry.class); // new
-                                                                                               // LinkedList<OperationEntry<Object>>();
+        this.scheduled = concurrency.newCollection().newThreadSafeQueue(OperationEntry.class);
 
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
