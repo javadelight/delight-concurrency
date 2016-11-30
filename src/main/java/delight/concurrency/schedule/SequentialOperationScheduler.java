@@ -131,32 +131,48 @@ public final class SequentialOperationScheduler {
             return;
         }
 
-        final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
-
-        final long operationStartTimestamp = System.currentTimeMillis();
-
         if (!enforceOwnThread) {
 
-            executeOperation(entry, operationCompleted);
+            executeWithTimeout(entry);
         } else {
             final OperationEntry<Object> entryClosed = entry;
             operationExecutor.execute(new Runnable() {
 
                 @Override
                 public void run() {
-                    executeOperation(entryClosed, operationCompleted);
+                    executeWithTimeout(entryClosed);
+
                 }
 
             }, timeout);
         }
 
+    }
+
+    private final void executeWithTimeout(final OperationEntry<Object> entry) {
+        final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
+        final long operationStartTimestamp = System.currentTimeMillis();
+
+        if (!enforceOwnThread) {
+            // TODO this seems to be causing too much CPU load for quick
+            // operations ...
+
+            // final Runnable test = createMonitorForTimouts(entry,
+            // operationCompleted, operationStartTimestamp);
+
+            // concurrency.newTimer().scheduleOnce(50, test);
+        }
+
+        executeOperation(entry, operationCompleted);
         if (operationCompleted.get() || shutDown.get()) {
             return;
         }
 
-        final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
+        if (enforceOwnThread) {
+            final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
 
-        concurrency.newTimer().scheduleOnce(timeout + 100, test);
+            concurrency.newTimer().scheduleOnce(50, test);
+        }
 
     }
 
