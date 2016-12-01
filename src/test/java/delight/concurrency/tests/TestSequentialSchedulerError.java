@@ -76,7 +76,7 @@ public class TestSequentialSchedulerError {
     @Test
     public void test_error_in_callback() throws InterruptedException {
 
-        final SequentialOperationScheduler scheduler = new SequentialOperationScheduler(ConcurrencyJre.create());
+        final SequentialOperationScheduler scheduler = new SequentialOperationScheduler(this, ConcurrencyJre.create());
 
         try {
             Async.waitFor(new Operation<Success>() {

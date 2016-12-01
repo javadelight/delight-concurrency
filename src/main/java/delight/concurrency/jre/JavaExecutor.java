@@ -17,16 +17,17 @@ public class JavaExecutor implements SimpleExecutor {
 
         final Future<?> future = executor.submit(runnable);
 
-        timers.scheduleOnce(timeout, new Runnable() {
-
-            @Override
-            public void run() {
-                if (!future.isDone()) {
-                    future.cancel(true);
-                    System.err.println(this + ": Task exceeded timeout of " + timeout + " ms (Task: " + runnable + ")");
-                }
-            }
-        });
+        // timers.scheduleOnce(timeout, new Runnable() {
+        //
+        // @Override
+        // public void run() {
+        // if (!future.isDone()) {
+        // future.cancel(true);
+        // System.err.println(this + ": Task exceeded timeout of " + timeout + "
+        // ms (Task: " + runnable + ")");
+        // }
+        // }
+        // });
 
     }
 
