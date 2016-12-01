@@ -122,7 +122,7 @@ public abstract class SingleInstanceQueueWorker<GItem> {
 
     public SingleInstanceQueueWorker(final Queue<GItem> queue, final Concurrency con) {
         this.con = con;
-        this.thread = new SequentialOperationScheduler(con);
+        this.thread = new SequentialOperationScheduler(this, con);
         this.queue = queue;
     }
 
