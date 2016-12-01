@@ -375,7 +375,7 @@ public final class SequentialOperationScheduler {
         this.enforceOwnThread = value;
     }
 
-    public SequentialOperationScheduler(final Concurrency concurrency) {
+    public SequentialOperationScheduler(final Object owner, final Concurrency concurrency) {
         super();
         assert concurrency != null;
         this.concurrency = concurrency;
@@ -383,9 +383,9 @@ public final class SequentialOperationScheduler {
 
         this.shuttingDown = concurrency.newAtomicBoolean(false);
         this.shutdownCallback = new Value<ValueCallback<Success>>(null);
-        this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(this);
+        this.operationExecutor = concurrency.newExecutor().newSingleThreadExecutor(owner);
 
-        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(10, this);
+        this.callbackExecutor = concurrency.newExecutor().newParallelExecutor(10, owner);
 
         this.suspendCount = concurrency.newAtomicInteger(0);
         this.operationInProgress = concurrency.newAtomicBoolean(false);
