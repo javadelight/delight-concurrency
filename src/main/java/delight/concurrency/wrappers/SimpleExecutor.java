@@ -21,7 +21,7 @@ public interface SimpleExecutor {
      * @param timeout
      *            The timeout in ms when the task should cancel.
      */
-    public void execute(Runnable runnable, int timeout);
+    public void execute(Runnable runnable, int timeout, Runnable onTimeout);
 
     public void shutdown(SimpleCallback callback);
 

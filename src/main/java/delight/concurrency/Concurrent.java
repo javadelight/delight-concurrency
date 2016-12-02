@@ -34,6 +34,17 @@ public class Concurrent {
         sequentialInt(operations, 0, new ArrayList<R>(operations.size()), asyncExecutor, callback);
     }
 
+    public static <R> void sequential(final List<Operation<R>> operations, final ValueCallback<List<R>> callback) {
+        sequentialInt(operations, 0, new ArrayList<R>(operations.size()), new Closure<Runnable>() {
+
+            @Override
+            public void apply(final Runnable o) {
+                o.run();
+            }
+
+        }, callback);
+    }
+
     private static <R> void sequentialInt(final List<Operation<R>> operations, final int idx, final List<R> results,
             final Closure<Runnable> asyncExecutor, final ValueCallback<List<R>> callback) {
 

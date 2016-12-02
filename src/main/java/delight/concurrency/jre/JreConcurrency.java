@@ -79,7 +79,7 @@ public class JreConcurrency implements Concurrency {
                     }
 
                     @Override
-                    public void execute(final Runnable runnable, final int timeout) {
+                    public void execute(final Runnable runnable, final int timeout, final Runnable onTimeout) {
                         runnable.run();
                     }
 

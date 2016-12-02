@@ -6,10 +6,12 @@ import delight.async.Value;
 import delight.async.callbacks.ValueCallback;
 import delight.concurrency.Concurrency;
 import delight.concurrency.internal.schedule.OperationEntry;
+import delight.concurrency.schedule.timeout.TimeoutWatcher;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.functional.Closure;
+import delight.functional.Function;
 import delight.functional.Success;
 
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ public final class SequentialOperationScheduler {
     private int timeout;
 
     private final SimpleExecutor callbackExecutor;
+
+    private final Object owner;
+
+    private final TimeoutWatcher timeoutWatcher;
 
     public boolean isRunning() {
 
@@ -144,23 +150,19 @@ public final class SequentialOperationScheduler {
 
                 }
 
-            }, timeout);
+            });
         }
 
     }
 
     private final void executeWithTimeout(final OperationEntry<Object> entry) {
         final SimpleAtomicBoolean operationCompleted = concurrency.newAtomicBoolean(false);
-        final long operationStartTimestamp = System.currentTimeMillis();
 
         if (!enforceOwnThread) {
-            // TODO this seems to be causing too much CPU load for quick
-            // operations ...
 
-            // final Runnable test = createMonitorForTimouts(entry,
-            // operationCompleted, operationStartTimestamp);
+            // TODO: this causes the engine to run much slower.
 
-            // concurrency.newTimer().scheduleOnce(50, test);
+            // watchForTimeouts(entry, operationCompleted);
         }
 
         executeOperation(entry, operationCompleted);
@@ -169,11 +171,34 @@ public final class SequentialOperationScheduler {
         }
 
         if (enforceOwnThread) {
-            final Runnable test = createMonitorForTimouts(entry, operationCompleted, operationStartTimestamp);
 
-            concurrency.newTimer().scheduleOnce(50, test);
+            watchForTimeouts(entry, operationCompleted);
+
         }
 
+    }
+
+    private void watchForTimeouts(final OperationEntry<Object> entry, final SimpleAtomicBoolean operationCompleted) {
+        this.timeoutWatcher.watch(this.timeout, new Function<Void, Boolean>() {
+
+            @Override
+            public Boolean apply(final Void input) {
+
+                return operationCompleted.get();
+            }
+
+        }, new Runnable() {
+
+            @Override
+            public void run() {
+                operationCompleted.set(true);
+                operationInProgress.set(false);
+                runIfRequired(true);
+
+                System.err.println(SequentialOperationScheduler.this + ": Timeout for operation: " + entry.operation);
+            }
+
+        });
     }
 
     private void executeOperation(final OperationEntry<Object> entryClosed,
@@ -259,39 +284,6 @@ public final class SequentialOperationScheduler {
         }
     }
 
-    private Runnable createMonitorForTimouts(final OperationEntry<Object> entryClosed,
-            final SimpleAtomicBoolean operationCompleted, final long operationStartTimestamp) {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                if (operationCompleted.get() == true) {
-                    return;
-                }
-                if (System.currentTimeMillis() - operationStartTimestamp > timeout) {
-
-                    operationCompleted.set(true);
-                    operationInProgress.set(false);
-                    runIfRequired(true);
-
-                    callbackExecutor.execute(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            entryClosed.callback
-                                    .onFailure(new Exception("Operation [" + entryClosed.operation + "] timed out."));
-                        }
-                    });
-
-                    return;
-                }
-
-                concurrency.newTimer().scheduleOnce(500,
-                        createMonitorForTimouts(entryClosed, operationCompleted, operationStartTimestamp));
-            }
-        };
-    }
-
     public void shutdown(final ValueCallback<Success> cb) {
 
         if (shuttingDown.get()) {
@@ -308,7 +300,7 @@ public final class SequentialOperationScheduler {
     private final void tryShutdown() {
 
         if (ENABLE_LOG) {
-            System.out.println(this + ": Attempting shutdown .. ");
+            System.out.println(this + "->" + owner + ": Attempting shutdown .. ");
         }
 
         if (!shuttingDown.get()) {
@@ -316,12 +308,13 @@ public final class SequentialOperationScheduler {
         }
 
         if (ENABLE_LOG) {
-            System.out.println(this + ": Attempting shutdown; running state: " + operationInProgress.get());
+            System.out.println(
+                    this + "->" + owner + ": Attempting shutdown; running state: " + operationInProgress.get());
         }
         if (operationInProgress.get() == false) {
 
             if (ENABLE_LOG) {
-                System.out.println(this + ": Attempting shutdown; still scheduled: " + scheduled.size());
+                System.out.println(this + "->" + owner + ": Attempting shutdown; still scheduled: " + scheduled.size());
             }
             if (scheduled.isEmpty()) {
                 performShutdown();
@@ -354,6 +347,15 @@ public final class SequentialOperationScheduler {
 
         });
 
+        ops.add(new Operation<Success>() {
+
+            @Override
+            public void apply(final ValueCallback<Success> callback) {
+                timeoutWatcher.shutdown(AsyncCommon.asSimpleCallback(callback));
+            }
+
+        });
+
         AsyncCommon.sequential(ops, AsyncCommon.embed(shutdownCallback.get(), new Closure<List<Success>>() {
 
             @Override
@@ -378,6 +380,7 @@ public final class SequentialOperationScheduler {
     public SequentialOperationScheduler(final Object owner, final Concurrency concurrency) {
         super();
         assert concurrency != null;
+        this.owner = owner;
         this.concurrency = concurrency;
         this.scheduled = concurrency.newCollection().newThreadSafeQueue(OperationEntry.class);
 
@@ -391,6 +394,8 @@ public final class SequentialOperationScheduler {
         this.operationInProgress = concurrency.newAtomicBoolean(false);
         this.shutDown = concurrency.newAtomicBoolean(false);
         this.timeout = 3000;
+
+        this.timeoutWatcher = new TimeoutWatcher(concurrency);
 
         this.enforceOwnThread = false;
 

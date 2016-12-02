@@ -16,20 +16,31 @@ public class TestExecutorTimeout {
     public void test() throws InterruptedException {
         final SimpleExecutor executor = new JreConcurrency().newExecutor().newParallelExecutor(1, this);
 
-        executor.execute(new Runnable() {
+        Async.waitFor(new Operation<Success>() {
 
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(150000);
-                } catch (final InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            public void apply(final ValueCallback<Success> callback) {
+                executor.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(150000);
+                        } catch (final InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+                }, 50, new Runnable() {
+
+                    @Override
+                    public void run() {
+                        callback.onSuccess(Success.INSTANCE);
+                    }
+                });
             }
 
-        }, 50);
-
-        Thread.sleep(300);
+        });
 
         Async.waitFor(new Operation<Success>() {
 
