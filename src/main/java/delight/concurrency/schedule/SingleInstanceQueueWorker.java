@@ -90,8 +90,12 @@ public abstract class SingleInstanceQueueWorker<GItem> {
                 items.add(next);
                 // break;
             }
-
-            processItems(items);
+            try {
+                processItems(items);
+            } catch (final Throwable t) {
+                callback.onFailure(t);
+                return;
+            }
 
         }
 
