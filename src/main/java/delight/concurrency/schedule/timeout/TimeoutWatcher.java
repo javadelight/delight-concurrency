@@ -61,16 +61,16 @@ public final class TimeoutWatcher {
         }
         invocations++;
         if (monitored.size() == 0) {
-            if (invocations < 200) {
+            if (invocations < 100) {
                 con.newTimer().scheduleOnce(100, runTestRunnable);
             } else {
-                con.newTimer().scheduleOnce(1000, runTestRunnable);
+                con.newTimer().scheduleOnce(1500, runTestRunnable);
             }
         } else {
             if (invocations < 200) {
-                con.newTimer().scheduleOnce(5, runTestRunnable);
+                con.newTimer().scheduleOnce(50, runTestRunnable);
             } else {
-                con.newTimer().scheduleOnce(500, runTestRunnable);
+                con.newTimer().scheduleOnce(1500, runTestRunnable);
             }
         }
 
