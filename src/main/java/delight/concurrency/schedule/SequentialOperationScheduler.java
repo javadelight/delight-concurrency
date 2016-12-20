@@ -172,7 +172,9 @@ public final class SequentialOperationScheduler {
 
         if (enforceOwnThread) {
 
-            watchForTimeouts(entry, operationCompleted);
+            // TODO: This causes higher CPU load in JavaScript
+
+            // watchForTimeouts(entry, operationCompleted);
 
         }
 

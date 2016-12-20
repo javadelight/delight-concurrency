@@ -43,6 +43,7 @@ public final class TimeoutWatcher {
         for (int i = 0; i < opcount; i++) {
 
             final TimeoutEntry entry = monitored.poll();
+
             if (entry != null && !entry.isCompleted.apply(null)) {
 
                 if (System.currentTimeMillis() - entry.startTime > entry.timeout) {
