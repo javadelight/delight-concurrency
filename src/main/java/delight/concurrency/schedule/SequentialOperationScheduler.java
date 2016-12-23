@@ -250,8 +250,6 @@ public final class SequentialOperationScheduler {
 
                     operationInProgress.set(false);
 
-                    runIfRequired(true);
-
                     callbackExecutor.execute(new Runnable() {
 
                         @Override
@@ -265,6 +263,8 @@ public final class SequentialOperationScheduler {
                             entryClosed.callback.onSuccess(value);
                         }
                     });
+
+                    runIfRequired(true);
 
                 }
             });
