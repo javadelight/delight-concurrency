@@ -20,7 +20,7 @@ import java.util.Queue;
 
 public final class SequentialOperationScheduler {
 
-    private static final boolean ENABLE_LOG = true;
+    private static final boolean ENABLE_LOG = false;
 
     @SuppressWarnings("rawtypes")
     private final Queue<OperationEntry> scheduled;
