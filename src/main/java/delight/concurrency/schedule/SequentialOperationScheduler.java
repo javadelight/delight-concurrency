@@ -344,7 +344,6 @@ public final class SequentialOperationScheduler {
             @Override
             public void apply(final ValueCallback<Success> callback) {
                 callbackExecutor.shutdown(AsyncCommon.asSimpleCallback(callback));
-
             }
 
         });
