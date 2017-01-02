@@ -147,7 +147,6 @@ public final class SequentialOperationScheduler {
                 @Override
                 public void run() {
                     executeWithTimeout(entryClosed);
-
                 }
 
             });

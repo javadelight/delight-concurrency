@@ -51,14 +51,22 @@ public class JreConcurrency implements Concurrency {
 
             @Override
             public SimpleExecutor newSingleThreadExecutor(final Object owner) {
-                final ThreadPoolExecutor executor = newExecutor(1, owner);
+                final ThreadPoolExecutor executor = newExecutor(1, 1, owner);
 
                 return new JavaExecutor(executor, JreConcurrency.this);
             }
 
             @Override
             public SimpleExecutor newParallelExecutor(final int maxParallelThreads, final Object owner) {
-                final ThreadPoolExecutor executor = newExecutor(maxParallelThreads, owner);
+                final ThreadPoolExecutor executor = newExecutor(0, maxParallelThreads, owner);
+
+                return new JavaExecutor(executor, JreConcurrency.this);
+            }
+
+            @Override
+            public SimpleExecutor newParallelExecutor(final int minThreads, final int maxParallelThreads,
+                    final Object owner) {
+                final ThreadPoolExecutor executor = newExecutor(minThreads, maxParallelThreads, owner);
 
                 return new JavaExecutor(executor, JreConcurrency.this);
             }
@@ -211,13 +219,13 @@ public class JreConcurrency implements Concurrency {
         };
     }
 
-    private static ThreadPoolExecutor newExecutor(final int capacity, final Object owner) {
+    private static ThreadPoolExecutor newExecutor(final int minThreads, final int capacity, final Object owner) {
 
-        return newExecutorJvm(capacity, owner);
+        return newExecutorJvm(minThreads, capacity, owner);
 
     }
 
-    private static ThreadPoolExecutor newExecutorJvm(final int capacity, final Object owner) {
+    private static ThreadPoolExecutor newExecutorJvm(final int minThreads, final int capacity, final Object owner) {
         final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
         final String threadName;
         if (owner instanceof String) {
@@ -242,7 +250,7 @@ public class JreConcurrency implements Concurrency {
             }
         };
 
-        final ThreadPoolExecutor executor = new ThreadPoolExecutor(capacity, capacity, 50, TimeUnit.MILLISECONDS,
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(minThreads, capacity, 50, TimeUnit.MILLISECONDS,
                 workQueue, threadFactory, rejectedExecutionHandler);
 
         return executor;
