@@ -227,6 +227,7 @@ public final class SequentialOperationScheduler {
                         @Override
                         public void run() {
                             if (operationCompleted.get()) {
+                                // System.out.println(this + " FAIL EX");
                                 throw new RuntimeException(
                                         "Operation [" + entryClosed.operation
                                                 + "] failed. Callback cannot be triggered, it was already triggered.",
@@ -375,6 +376,10 @@ public final class SequentialOperationScheduler {
 
     public void setEnforceOwnThread(final boolean value) {
         this.enforceOwnThread = value;
+    }
+
+    public int scheduledCount() {
+        return scheduled.size();
     }
 
     public SequentialOperationScheduler(final Object owner, final Concurrency concurrency) {
