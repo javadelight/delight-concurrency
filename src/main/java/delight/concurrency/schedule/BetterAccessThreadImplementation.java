@@ -259,26 +259,6 @@ public class BetterAccessThreadImplementation implements AccessThread {
         return this.running.get();
     }
 
-    public BetterAccessThreadImplementation(final Concurrency concurrency) {
-        super();
-        this.concurrency = concurrency;
-
-        this.executor = concurrency.newExecutor().newSingleThreadExecutor(this);
-
-        this.running = concurrency.newAtomicBoolean(false);
-        this.isShutDown = concurrency.newAtomicBoolean(false);
-        this.shutdownRequested = concurrency.newAtomicBoolean(false);
-
-        this.queue = concurrency.newCollection().newThreadSafeQueue(Step.class);
-
-        this.lock = concurrency.newLock();
-
-        this.finalizedListener = concurrency.newCollection().newThreadSafeList(SimpleCallback.class);
-
-        // this.maxCalltime = -1;
-
-    }
-
     @Override
     public SingleInstanceThread asSingleInstanceThread() {
 
@@ -372,6 +352,26 @@ public class BetterAccessThreadImplementation implements AccessThread {
             }
 
         };
+    }
+
+    public BetterAccessThreadImplementation(final Concurrency concurrency) {
+        super();
+        this.concurrency = concurrency;
+
+        this.executor = concurrency.newExecutor().newSingleThreadExecutor(this);
+
+        this.running = concurrency.newAtomicBoolean(false);
+        this.isShutDown = concurrency.newAtomicBoolean(false);
+        this.shutdownRequested = concurrency.newAtomicBoolean(false);
+
+        this.queue = concurrency.newCollection().newThreadSafeQueue(Step.class);
+
+        this.lock = concurrency.newLock();
+
+        this.finalizedListener = concurrency.newCollection().newThreadSafeList(SimpleCallback.class);
+
+        // this.maxCalltime = -1;
+
     }
 
 }

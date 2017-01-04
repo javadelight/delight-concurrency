@@ -231,7 +231,7 @@ public class JreConcurrency implements Concurrency {
         if (owner instanceof String) {
             threadName = (String) owner;
         } else {
-            threadName = owner.getClass().getName();
+            threadName = owner.toString();
         }
 
         final ThreadFactory threadFactory;
