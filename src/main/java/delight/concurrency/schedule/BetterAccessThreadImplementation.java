@@ -76,17 +76,18 @@ public class BetterAccessThreadImplementation implements AccessThread {
             @Override
             public void run() {
 
-                BetterAccessThreadImplementation.this.run(new AccessThreadNotifiyer() {
-
-                    @Override
-                    public void notifiyFinished() {
-
-                        runProtected();
-
-                    }
-                });
             }
 
+        });
+
+        BetterAccessThreadImplementation.this.run(new AccessThreadNotifiyer() {
+
+            @Override
+            public void notifiyFinished() {
+
+                runProtected();
+
+            }
         });
     }
 
