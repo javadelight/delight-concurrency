@@ -234,6 +234,8 @@ public final class JreConcurrency implements Concurrency {
             threadName = owner.toString();
         }
 
+        System.out.println("NEW " + owner);
+
         final ThreadFactory threadFactory;
         if (!isAndroid()) {
             threadFactory = newThreadFactoryJvm(threadName);
