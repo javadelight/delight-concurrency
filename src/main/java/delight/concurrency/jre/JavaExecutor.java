@@ -135,7 +135,11 @@ public class JavaExecutor implements SimpleExecutor {
 
     @Override
     public int pendingTasks() {
-
+        synchronized (this) {
+            if (executor == null) {
+                return 0;
+            }
+        }
         return executor.getQueue().size();
     }
 
