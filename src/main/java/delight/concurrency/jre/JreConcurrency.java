@@ -10,6 +10,7 @@ import delight.concurrency.wrappers.SimpleAtomicInteger;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleLock;
 import delight.concurrency.wrappers.SimpleTimer;
+import delight.functional.Function;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,24 +52,21 @@ public final class JreConcurrency implements Concurrency {
 
             @Override
             public SimpleExecutor newSingleThreadExecutor(final Object owner) {
-                final ThreadPoolExecutor executor = newExecutor(1, 1, owner);
 
-                return new JavaExecutor(executor, JreConcurrency.this);
+                return new JavaExecutor(newExecutorFactory(1, 1, owner), JreConcurrency.this);
             }
 
             @Override
             public SimpleExecutor newParallelExecutor(final int maxParallelThreads, final Object owner) {
-                final ThreadPoolExecutor executor = newExecutor(0, maxParallelThreads, owner);
 
-                return new JavaExecutor(executor, JreConcurrency.this);
+                return new JavaExecutor(newExecutorFactory(0, maxParallelThreads, owner), JreConcurrency.this);
             }
 
             @Override
             public SimpleExecutor newParallelExecutor(final int minThreads, final int maxParallelThreads,
                     final Object owner) {
-                final ThreadPoolExecutor executor = newExecutor(minThreads, maxParallelThreads, owner);
 
-                return new JavaExecutor(executor, JreConcurrency.this);
+                return new JavaExecutor(newExecutorFactory(minThreads, maxParallelThreads, owner), JreConcurrency.this);
             }
 
             @Override
@@ -219,6 +217,18 @@ public final class JreConcurrency implements Concurrency {
         };
     }
 
+    private static Function<Void, ThreadPoolExecutor> newExecutorFactory(final int minThreads, final int capacity,
+            final Object owner) {
+        return new Function<Void, ThreadPoolExecutor>() {
+
+            @Override
+            public ThreadPoolExecutor apply(final Void input) {
+
+                return newExecutor(minThreads, capacity, owner);
+            }
+        };
+    }
+
     private static ThreadPoolExecutor newExecutor(final int minThreads, final int capacity, final Object owner) {
 
         return newExecutorJvm(minThreads, capacity, owner);
@@ -233,8 +243,6 @@ public final class JreConcurrency implements Concurrency {
         } else {
             threadName = owner.toString();
         }
-
-        System.out.println("NEW " + owner);
 
         final ThreadFactory threadFactory;
         if (!isAndroid()) {
