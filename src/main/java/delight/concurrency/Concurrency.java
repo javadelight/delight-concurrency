@@ -5,6 +5,7 @@ import delight.concurrency.factories.ExecutorFactory;
 import delight.concurrency.factories.TimerFactory;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
+import delight.concurrency.wrappers.SimpleAtomicLong;
 import delight.concurrency.wrappers.SimpleLock;
 
 /**
@@ -27,4 +28,6 @@ public interface Concurrency {
     public abstract SimpleAtomicBoolean newAtomicBoolean(boolean value);
 
     public abstract SimpleAtomicInteger newAtomicInteger(int value);
+
+    public abstract SimpleAtomicLong newAtomicLong(long value);
 }

@@ -7,6 +7,7 @@ import delight.concurrency.factories.ExecutorFactory;
 import delight.concurrency.factories.TimerFactory;
 import delight.concurrency.wrappers.SimpleAtomicBoolean;
 import delight.concurrency.wrappers.SimpleAtomicInteger;
+import delight.concurrency.wrappers.SimpleAtomicLong;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.concurrency.wrappers.SimpleLock;
 import delight.concurrency.wrappers.SimpleTimer;
@@ -30,6 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class JreConcurrency implements Concurrency {
@@ -349,6 +351,40 @@ public final class JreConcurrency implements Concurrency {
 
             @Override
             public int decrementAndGet() {
+                return wrapped.decrementAndGet();
+            }
+        };
+    }
+
+    @Override
+    public SimpleAtomicLong newAtomicLong(final long value) {
+
+        return new SimpleAtomicLong() {
+
+            private final AtomicLong wrapped = new AtomicLong(value);
+
+            @Override
+            public void set(final long newValue) {
+                wrapped.set(newValue);
+            }
+
+            @Override
+            public long incrementAndGet() {
+                return wrapped.incrementAndGet();
+            }
+
+            @Override
+            public long getAndSet(final long newValue) {
+                return wrapped.getAndSet(newValue);
+            }
+
+            @Override
+            public long get() {
+                return wrapped.get();
+            }
+
+            @Override
+            public long decrementAndGet() {
                 return wrapped.decrementAndGet();
             }
         };
