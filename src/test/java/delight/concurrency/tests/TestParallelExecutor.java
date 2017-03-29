@@ -72,7 +72,7 @@ public class TestParallelExecutor {
 
         }).start();
 
-        Thread.sleep(100);
+        Thread.sleep(200);
 
         Assert.assertTrue("Got count: " + maxCount.get(), maxCount.get() > 3);
 
