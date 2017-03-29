@@ -26,9 +26,11 @@ public class TestParallelExecutor {
 
                 @Override
                 public void run() {
-                    System.out.println("run ...");
+
                     final int newCount = runCount.incrementAndGet();
                     Assert.assertTrue(newCount <= 5);
+
+                    System.out.println("run ... " + newCount);
                     try {
                         Thread.sleep(10);
                     } catch (final InterruptedException e) {
