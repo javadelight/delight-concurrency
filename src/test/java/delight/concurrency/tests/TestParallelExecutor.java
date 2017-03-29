@@ -62,7 +62,7 @@ public class TestParallelExecutor {
 
         }).start();
 
-        Thread.sleep(100);
+        Thread.sleep(1000);
 
         Assert.assertTrue("Expected more than 5 pending tasks but got " + executor.pendingTasks(),
                 executor.pendingTasks() > 5);
