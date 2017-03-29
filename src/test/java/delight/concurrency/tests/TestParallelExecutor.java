@@ -74,8 +74,7 @@ public class TestParallelExecutor {
 
         Thread.sleep(100);
 
-        Assert.assertTrue("Expected more than 3 pending tasks but got " + executor.pendingTasks(),
-                executor.pendingTasks() > 2);
+        Assert.assertTrue("Got count: " + maxCount.get(), maxCount.get() > 3);
 
         final List<String> list = Collections.synchronizedList(new ArrayList<String>());
 
