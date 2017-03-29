@@ -23,11 +23,13 @@ public class TestParallelExecutor {
 
                 @Override
                 public void run() {
+                    System.out.println("run ...");
                     try {
                         Thread.sleep(10);
                     } catch (final InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    System.out.println("done ...");
                 }
 
             }, 3000, new Runnable() {
