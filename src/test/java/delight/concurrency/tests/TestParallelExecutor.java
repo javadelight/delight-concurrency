@@ -30,6 +30,7 @@ public class TestParallelExecutor {
                     final int newCount = runCount.incrementAndGet();
                     Assert.assertTrue(newCount <= 5);
 
+                    final long startTime = System.currentTimeMillis();
                     System.out.println("run ... " + newCount);
                     try {
                         Thread.sleep(10);
@@ -37,7 +38,8 @@ public class TestParallelExecutor {
                         throw new RuntimeException(e);
                     }
                     runCount.decrementAndGet();
-                    System.out.println("done!");
+                    final long duration = System.currentTimeMillis() - startTime;
+                    System.out.println("done! " + duration);
 
                 }
 
