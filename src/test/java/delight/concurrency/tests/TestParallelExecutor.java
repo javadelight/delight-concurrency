@@ -23,13 +23,13 @@ public class TestParallelExecutor {
 
                 @Override
                 public void run() {
-                    System.out.println("run ...");
+
                     try {
                         Thread.sleep(10);
                     } catch (final InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println("done ...");
+
                 }
 
             }, 3000, new Runnable() {
@@ -62,7 +62,7 @@ public class TestParallelExecutor {
 
         }).start();
 
-        Thread.sleep(10);
+        Thread.sleep(100);
 
         Assert.assertTrue("Expected more than 5 pending tasks but got " + executor.pendingTasks(),
                 executor.pendingTasks() > 5);
