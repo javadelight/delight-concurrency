@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
+
     private ThreadPoolExecutor executor;
     private final TimeoutWatcher timeoutWatcher;
 
@@ -23,9 +24,10 @@ public class JavaExecutor implements SimpleExecutor {
             if (executor != null) {
                 return;
             }
+
+            executor = executorFactory.apply(null);
         }
 
-        executor = executorFactory.apply(null);
     }
 
     @Override
