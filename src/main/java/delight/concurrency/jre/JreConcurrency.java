@@ -263,6 +263,8 @@ public final class JreConcurrency implements Concurrency {
             }
         };
 
+        System.out.println(JreConcurrency.class + " Creating executor " + minThreads + " " + capacity);
+
         final ThreadPoolExecutor executor = new ThreadPoolExecutor(minThreads, capacity, 50, TimeUnit.MILLISECONDS,
                 workQueue, threadFactory, rejectedExecutionHandler);
 
