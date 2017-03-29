@@ -62,7 +62,8 @@ public class TestParallelExecutor {
 
         Thread.sleep(10);
 
-        Assert.assertTrue(executor.pendingTasks() > 5);
+        Assert.assertTrue("Expected more than 5 pending tasks but got " + executor.pendingTasks(),
+                executor.pendingTasks() > 5);
 
         final List<String> list = Collections.synchronizedList(new ArrayList<String>());
 
