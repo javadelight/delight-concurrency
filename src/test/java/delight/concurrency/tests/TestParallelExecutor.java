@@ -43,12 +43,6 @@ public class TestParallelExecutor {
 
                 }
 
-            }, 3000, new Runnable() {
-
-                @Override
-                public void run() {
-
-                }
             });
 
         }
