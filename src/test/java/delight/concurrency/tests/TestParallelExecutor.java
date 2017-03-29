@@ -6,6 +6,7 @@ import delight.concurrency.wrappers.SimpleExecutor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +14,8 @@ import org.junit.Test;
 public class TestParallelExecutor {
 
     SimpleExecutor executor;
+
+    AtomicInteger runCount;
 
     private class FireThread implements Runnable {
 
@@ -24,11 +27,14 @@ public class TestParallelExecutor {
                 @Override
                 public void run() {
                     System.out.println("run ...");
+                    final int newCount = runCount.incrementAndGet();
+                    Assert.assertTrue(newCount <= 5);
                     try {
                         Thread.sleep(10);
                     } catch (final InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    runCount.decrementAndGet();
                     System.out.println("done!");
 
                 }
@@ -49,7 +55,7 @@ public class TestParallelExecutor {
     public void test_non_blocking() throws InterruptedException {
 
         executor = new JreConcurrency().newExecutor().newParallelExecutor(5, this);
-
+        runCount = new AtomicInteger(0);
         new Thread(new Runnable() {
 
             @Override
