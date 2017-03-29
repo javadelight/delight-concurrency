@@ -17,6 +17,8 @@ public class TestParallelExecutor {
 
     AtomicInteger runCount;
 
+    AtomicInteger maxCount;
+
     private class FireThread implements Runnable {
 
         @Override
@@ -30,16 +32,18 @@ public class TestParallelExecutor {
                     final int newCount = runCount.incrementAndGet();
                     Assert.assertTrue(newCount <= 5);
 
-                    final long startTime = System.currentTimeMillis();
-                    System.out.println("run ... " + newCount);
+                    if (newCount > maxCount.get()) {
+                        maxCount.set(newCount);
+                    }
+
+                    // final long startTime = System.currentTimeMillis();
+
                     try {
                         Thread.sleep(10);
                     } catch (final InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                     runCount.decrementAndGet();
-                    final long duration = System.currentTimeMillis() - startTime;
-                    System.out.println("done! " + duration);
 
                 }
 
@@ -54,6 +58,7 @@ public class TestParallelExecutor {
 
         executor = new JreConcurrency().newExecutor().newParallelExecutor(5, this);
         runCount = new AtomicInteger(0);
+        maxCount = new AtomicInteger(0);
         new Thread(new Runnable() {
 
             @Override
