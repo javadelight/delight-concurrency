@@ -29,6 +29,7 @@ public class TestParallelExecutor {
                     } catch (final InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    System.out.println("done!");
 
                 }
 
@@ -62,7 +63,7 @@ public class TestParallelExecutor {
 
         }).start();
 
-        Thread.sleep(1000);
+        Thread.sleep(250);
 
         Assert.assertTrue("Expected more than 5 pending tasks but got " + executor.pendingTasks(),
                 executor.pendingTasks() > 5);
