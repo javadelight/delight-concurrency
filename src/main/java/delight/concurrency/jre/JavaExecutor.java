@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class JavaExecutor implements SimpleExecutor {
 
-    private ThreadPoolExecutor executor;
+    private final ThreadPoolExecutor executor;
     private final TimeoutWatcher timeoutWatcher;
 
     private final SimpleAtomicInteger running;
@@ -20,13 +20,12 @@ public class JavaExecutor implements SimpleExecutor {
     private final Function<Void, ThreadPoolExecutor> executorFactory;
 
     private final void assertExecutor() {
-        synchronized (this) {
-            if (executor != null) {
-                return;
-            }
-
-            executor = executorFactory.apply(null);
-        }
+        // synchronized (this) {
+        // if (executor != null) {
+        // return;
+        // }
+        //
+        // }
 
     }
 
@@ -128,7 +127,7 @@ public class JavaExecutor implements SimpleExecutor {
     public JavaExecutor(final Function<Void, ThreadPoolExecutor> executorFactory, final JreConcurrency concurrency) {
         super();
         this.executorFactory = executorFactory;
-        this.executor = null;
+        this.executor = executorFactory.apply(null);
         this.timeoutWatcher = new TimeoutWatcher(concurrency);
         this.running = concurrency.newAtomicInteger(0);
         this.scheduled = concurrency.newAtomicInteger(0);
