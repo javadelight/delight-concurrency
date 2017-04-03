@@ -79,8 +79,11 @@ public class JavaExecutor implements SimpleExecutor {
                 running.incrementAndGet();
                 scheduled.decrementAndGet();
 
-                runnable.run();
-                running.decrementAndGet();
+                try {
+                    runnable.run();
+                } finally {
+                    running.decrementAndGet();
+                }
             }
         });
 
