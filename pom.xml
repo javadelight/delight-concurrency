@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.javadelight</groupId>
 			<artifactId>delight-async</artifactId>
-			<version>0.1.1</version>
+			<version>0.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javadelight</groupId>
