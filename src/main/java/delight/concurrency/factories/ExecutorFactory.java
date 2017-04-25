@@ -12,6 +12,14 @@ public interface ExecutorFactory {
     public abstract SimpleExecutor newSingleThreadExecutor(Object owner);
 
     /**
+     * Runs operations asynchronously.
+     * 
+     * @param owner
+     * @return
+     */
+    public abstract SimpleExecutor newAsyncExecutor(Object owner);
+
+    /**
      * Will execute commands in a number of parallel threads.
      * 
      * 

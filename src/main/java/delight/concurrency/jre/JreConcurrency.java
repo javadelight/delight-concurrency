@@ -59,6 +59,12 @@ public final class JreConcurrency implements Concurrency {
             }
 
             @Override
+            public SimpleExecutor newAsyncExecutor(final Object owner) {
+
+                return newSingleThreadExecutor(owner);
+            }
+
+            @Override
             public SimpleExecutor newParallelExecutor(final int maxParallelThreads, final Object owner) {
 
                 return new JavaExecutor(newExecutorFactory(maxParallelThreads, maxParallelThreads, owner),

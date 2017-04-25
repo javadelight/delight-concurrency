@@ -147,7 +147,8 @@ public class Concurrent {
 
                 if (exc == null) {
                     // System.out.println("Create dedicated executor.");
-                    exc = concurrency.newExecutor().newSingleThreadExecutor(callback);
+
+                    exc = concurrency.newExecutor().newAsyncExecutor(this);
                     executor.set(exc);
                 }
 
