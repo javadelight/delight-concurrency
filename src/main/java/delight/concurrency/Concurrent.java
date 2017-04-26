@@ -119,17 +119,41 @@ public class Concurrent {
             return;
         }
 
+        final Value<Boolean> failureReceived = new Value<Boolean>(false);
+        final Value<Boolean> successReceived = new Value<Boolean>(false);
+
         operations.get(idx).apply(new ValueCallback<R>() {
 
             @Override
             public void onFailure(final Throwable t) {
+                if (successReceived.get()) {
+                    throw new RuntimeException("Cannot process failure callback <" + t.getMessage() + "> for operation "
+                            + operations.get(idx) + ". Success already received.", t);
+                }
+                if (failureReceived.get()) {
+                    System.err.println("Cannot process failure callback for operation " + operations.get(idx)
+                            + ". Failure already received.\n  Failure which cannot be processed:\n  <" + t.getMessage()
+                            + ">");
+                    return;
+                }
 
+                failureReceived.set(true);
                 callback.onFailure(t);
             }
 
             @Override
             public void onSuccess(final R value) {
 
+                if (successReceived.get()) {
+                    throw new RuntimeException("Cannot process success callback  for operation " + operations.get(idx)
+                            + ". Success already received.");
+                }
+                if (failureReceived.get()) {
+                    throw new RuntimeException("Cannot process success callback  for operation " + operations.get(idx)
+                            + ". Failure already received.");
+                }
+
+                successReceived.set(true);
                 if (results.size() > idx) {
 
                     callback.onFailure(
