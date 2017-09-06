@@ -1,18 +1,5 @@
 package delight.concurrency.jre;
 
-import delight.async.callbacks.SimpleCallback;
-import delight.concurrency.Concurrency;
-import delight.concurrency.factories.CollectionFactory;
-import delight.concurrency.factories.ExecutorFactory;
-import delight.concurrency.factories.TimerFactory;
-import delight.concurrency.wrappers.SimpleAtomicBoolean;
-import delight.concurrency.wrappers.SimpleAtomicInteger;
-import delight.concurrency.wrappers.SimpleAtomicLong;
-import delight.concurrency.wrappers.SimpleExecutor;
-import delight.concurrency.wrappers.SimpleLock;
-import delight.concurrency.wrappers.SimpleTimer;
-import delight.functional.Function;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,6 +20,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import delight.async.callbacks.SimpleCallback;
+import delight.concurrency.Concurrency;
+import delight.concurrency.factories.CollectionFactory;
+import delight.concurrency.factories.ExecutorFactory;
+import delight.concurrency.factories.TimerFactory;
+import delight.concurrency.wrappers.SimpleAtomicBoolean;
+import delight.concurrency.wrappers.SimpleAtomicInteger;
+import delight.concurrency.wrappers.SimpleAtomicLong;
+import delight.concurrency.wrappers.SimpleExecutor;
+import delight.concurrency.wrappers.SimpleLock;
+import delight.concurrency.wrappers.SimpleReadWriteLock;
+import delight.concurrency.wrappers.SimpleTimer;
+import delight.functional.Function;
 
 public final class JreConcurrency implements Concurrency {
 
@@ -398,5 +400,63 @@ public final class JreConcurrency implements Concurrency {
             }
         };
     }
+
+	@Override
+	public SimpleReadWriteLock newReadWriteLock() {
+		
+		final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+		
+		return new SimpleReadWriteLock() {
+			
+			@Override
+			public SimpleLock writeLock() {
+				
+				return new SimpleLock() {
+					
+					
+					
+					@Override
+					public void lock() {
+						lock.writeLock().lock();
+					}
+
+					@Override
+					public void unlock() {
+						lock.writeLock().unlock();
+					}
+					
+					@Override
+					public boolean isHeldByCurrentThread() {
+						return lock.writeLock().isHeldByCurrentThread();
+						
+					}
+				};
+			}
+			
+			@Override
+			public SimpleLock readLock() {
+				
+				return new SimpleLock() {
+
+					@Override
+					public void lock() {
+						lock.readLock().lock();
+					}
+					
+					@Override
+					public void unlock() {
+						lock.readLock().unlock();
+					}
+
+					@Override
+					public boolean isHeldByCurrentThread() {
+						
+						return true;
+					}
+					
+				};
+			}
+		};
+	}
 
 }
