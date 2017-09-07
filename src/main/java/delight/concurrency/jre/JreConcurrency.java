@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.TimerTask;
+import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -225,6 +226,13 @@ public final class JreConcurrency implements Concurrency {
             public <ItemType> Set<ItemType> newThreadSafeSet(final Class<ItemType> itemType) {
                 return Collections.synchronizedSet(new HashSet<ItemType>());
             }
+
+			@Override
+			public <KeyType, ValueType> Map<KeyType, ValueType> newWeakHashMap(Class<KeyType> keyType,
+					Class<ValueType> valueType) {
+				
+				return new WeakHashMap<KeyType, ValueType>(20);
+			}
         };
     }
 

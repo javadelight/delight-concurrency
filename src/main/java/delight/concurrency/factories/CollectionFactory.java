@@ -18,5 +18,7 @@ public interface CollectionFactory {
 
 	public abstract <ItemType> Set<ItemType> newThreadSafeSet(
 			Class<ItemType> itemType);
-
+	
+	public abstract <KeyType, ValueType> Map<KeyType, ValueType> newWeakHashMap(Class<KeyType> keyType, Class<ValueType> valueType);
+	
 }
