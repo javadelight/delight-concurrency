@@ -8,7 +8,7 @@
 	<url>https://github.com/mxro/concurrency-api</url>
 	<properties>
 
-		<module.gwtVersion>2.5.1</module.gwtVersion>
+		<module.gwtVersion>2.8.2</module.gwtVersion>
 		<module.draftCompile>true</module.draftCompile>
 		<module.importedPackages>
 			org.junit,
