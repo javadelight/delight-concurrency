@@ -107,7 +107,7 @@ public class TestParallelExecutor {
 					
 					@Override
 					public void onFailure(Throwable t) {
-						
+						callback.onFailure(t);
 					}
 					
 					@Override
