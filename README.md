@@ -52,6 +52,21 @@ executor.shutdown(new SimpleCallback() {
 });
 ```
 
+## Maven Dependency
+
+```xml
+<dependency>
+    <groupId>org.javadelight</groupId>
+	<artifactId>delight-concurrency</artifactId>
+	<version>[latest version]</version>
+</dependency>
+```
+
+This artifact is available on [Maven Central](https://search.maven.org/#search%7Cga%7C1%7Cdelight-concurrency) and 
+[BinTray](https://bintray.com/javadelight/javadelight/delight-concurrency).
+
+[![Maven Central](https://img.shields.io/maven-central/v/org.javadelight/delight-concurrency.svg)](https://search.maven.org/#search%7Cga%7C1%7Cdelight-concurrency)
+
 ## Links
 
 - [JavaDocs](http://modules.appjangle.com/delight-concurrency/latest/apidocs/index.html)
