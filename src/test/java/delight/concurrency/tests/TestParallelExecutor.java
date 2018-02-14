@@ -1,8 +1,5 @@
 package delight.concurrency.tests;
 
-import delight.concurrency.jre.JreConcurrency;
-import delight.concurrency.wrappers.SimpleExecutor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +7,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import delight.async.Operation;
+import delight.async.callbacks.SimpleCallback;
+import delight.async.callbacks.ValueCallback;
+import delight.async.jre.Async;
+import delight.concurrency.jre.JreConcurrency;
+import delight.concurrency.wrappers.SimpleExecutor;
+import delight.functional.Success;
 
 public class TestParallelExecutor {
 
@@ -93,6 +98,27 @@ public class TestParallelExecutor {
 
         Assert.assertEquals("1", list.get(0));
         Assert.assertEquals("2", list.get(1));
+        
+        Async.waitFor(new Operation<Success>() {
+
+			@Override
+			public void apply(final ValueCallback<Success> callback) {
+				executor.shutdown(new SimpleCallback() {
+					
+					@Override
+					public void onFailure(Throwable t) {
+						
+					}
+					
+					@Override
+					public void onSuccess() {
+						callback.onSuccess(Success.INSTANCE);
+					}
+				});
+			}
+		});
+        
+        
 
     }
 
