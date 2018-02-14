@@ -3,7 +3,7 @@
 
 	<groupId>org.javadelight</groupId>
 	<artifactId>delight-concurrency</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<description>An abstract and lightweight definition of concurrency fundamentals.</description>
 	<url>https://github.com/javadelight/delight-concurrency</url>
 	<properties>
