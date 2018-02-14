@@ -11,7 +11,7 @@ Part of [Java Delight](https://github.com/javadelight/delight-main#java-delight-
 
 ## Usage
 
-Initialize concurrency.
+Initialize concurrency instance.
 
 ```java
 Concurrency concurrency = ConcurrencyJre.create();
