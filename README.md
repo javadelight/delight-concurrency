@@ -5,7 +5,7 @@ delight-concurrency
 
 Abstract concurrency API for Java applications based on vanilla Java.
 
-Thi
+This library is particularly useful when threads and thread-safe objects are used in code which is shared between GWT and JRE environments.  
 
 Part of [Java Delight](https://github.com/javadelight/delight-main#java-delight-suite).
 
