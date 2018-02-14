@@ -17,7 +17,28 @@ Initialize concurrency instance.
 Concurrency concurrency = ConcurrencyJre.create();
 ```
 
+Create an executor:
+
+```java
 SimpleExecutor executor = concurrency.newExecutor().newParallelExecutor(5, this);
+
+executor.execute(new Runnable() {
+  ...
+});
+
+executor.shutdown(new SimpleCallback() {
+			
+	@Override
+	public void onFailure(Throwable t) {
+		throw new RuntimeException(t);
+	}
+	
+	@Override
+	public void onSuccess() {
+		// all done
+	}
+});
+
 ```
 
 ## Links
