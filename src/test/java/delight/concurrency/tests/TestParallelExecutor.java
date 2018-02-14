@@ -16,6 +16,7 @@ import delight.concurrency.jre.JreConcurrency;
 import delight.concurrency.wrappers.SimpleExecutor;
 import delight.functional.Success;
 
+
 public class TestParallelExecutor {
 
     SimpleExecutor executor;

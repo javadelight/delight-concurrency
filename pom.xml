@@ -139,7 +139,7 @@
 				<configuration>
 
 					<draftCompile>${module.draftCompile}</draftCompile>
-					<logLevel>DEBUG</logLevel>
+					<logLevel>WARN</logLevel>
 					<!-- -->
 					<validateOnly>true</validateOnly>
 					<gwtVersion>${module.gwtVersion}</gwtVersion>

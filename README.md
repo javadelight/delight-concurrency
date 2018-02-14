@@ -17,6 +17,18 @@ Initialize concurrency instance.
 Concurrency concurrency = ConcurrencyJre.create();
 ```
 
+Create an atomic Integer:
+
+```java
+SimpleAtomicInteger = concurrency.newAtomicInteger(0);
+```
+
+Create a collection:
+
+```java
+List<String> list = concurreny.newCollection().newThreadSafeList(String);
+```
+
 Create an executor:
 
 ```java
@@ -38,7 +50,6 @@ executor.shutdown(new SimpleCallback() {
 		// all done
 	}
 });
-
 ```
 
 ## Links
